@@ -1,0 +1,169 @@
+#!/bin/bash
+argument="$1"
+
+if [ "$argument" == "brightness" ];then
+	cat /sys/class/backlight/intel_backlight/brightness
+fi
+
+if [ "$argument" == "brightness_max" ];then
+	cat /sys/class/backlight/intel_backlight/max_brightness
+fi
+
+if [ "$argument" == "brightness_formatted" ];then
+	brightness=`/home/jake/Programming/Bash/current brightness`
+	maxbrightness=`/home/jake/Programming/Bash/current brightness_max`
+	brightness_perc=$(( $brightness * 100 / $maxbrightness ))
+	echo " ["$brightness"/"$maxbrightness"("$brightness_perc"%)]"
+fi
+
+if [ "$argument" == "time" ];then
+	TIME_FORMAT="%l:%M:%S%p"
+	date +" $TIME_FORMAT"
+fi
+
+if [ "$argument" == "date" ];then
+	DATE_FORMAT="%a %Y/%-m/%-d"
+	date +"  $DATE_FORMAT"
+fi
+
+if [ "$argument" == "volume" ];then
+	echo `pactl list sinks | grep -A 9 "Sink #0" | grep "Volume" | tr -s ' ' | cut -d ' ' -f 5 | tr -d '%'`
+fi
+
+if [ "$argument" == "mute" ];then
+	echo `pactl list sinks | grep -A 8 "Sink #0" | grep "Mute:" | tr -s ' ' | cut -d ' ' -f 2`
+	
+fi
+
+if [ "$argument" == "volume_formatted" ];then
+	volume=`/home/jake/Programming/Bash/current volume`
+	muted=`/home/jake/Programming/Bash/current mute`
+	if [ "$muted" == "no" ];then
+		if [ $volume -le 0 ];then
+			echo " ["$volume"%]"
+		fi
+		if [ $volume -gt 0 ] && [ $volume -lt 50 ];then
+			echo " ["$volume"%]"
+		fi
+		if [ $volume -ge 50 ];then
+			echo " ["$volume"%]"
+		fi
+	else
+		echo "M ["$volume"%]"
+	fi
+fi
+
+if [ "$argument" == "availableupdates" ];then
+	echo `checkupdates | wc -l`
+fi
+
+if [ "$argument" == "availableupdates_formatted" ];then
+	availableupdates=`/home/jake/Programming/Bash/current availableupdates`
+	if [ $availableupdates -ge 1 ];then
+		echo '<span foreground="#FF0000"> '$availableupdates'</span>'
+	else
+		echo '<span foreground="#FFFFFF"> '$availableupdates'</span>'
+	fi
+fi
+
+if [ "$argument" == "wireless_ESSID" ];then
+	iwgetid -r
+fi
+
+if [ "$argument" == "wireless_signalstrength_dbm" ];then
+	echo `iwconfig wlp1s0 | grep "Link Quality=" | tr -s ' ' | cut -d ' ' -f 5 | cut -d '=' -f 2`
+fi
+
+if [ "$argument" == "wireless_signalstrength_humanreadable" ];then
+	dbm=$(( -1 * `/home/jake/Programming/Bash/current wireless_signalstrength_dbm` ))
+	: '
+	Excellent	= (inf,50]
+	Good		= (50,60]
+	Fair		= (60,70]
+	Weak		= (70,inf)
+	'
+	if [ $dbm -le 50 ];then
+		echo "Excellent"
+	fi
+
+	if [ $dbm -gt 50 ] && [ $dbm -le 60 ];then
+		echo "Good"
+	fi
+
+	if [ $dbm -gt 60 ] && [ $dbm -le 70 ];then
+		echo "Fair"
+	fi
+
+	if [ $dbm -gt 70 ];then
+		echo "Weak"
+	fi
+fi
+
+if [ "$argument" == "wireless_formatted" ];then
+	signalstrength_humanreadable=`/home/jake/Programming/Bash/current wireless_signalstrength_humanreadable`
+	ESSID=`/home/jake/Programming/Bash/current wireless_ESSID`
+	if [ "$signalstrength_humanreadable" == "Excellent" ];then
+		echo '<span foreground="#31698A"> ['$ESSID']</span>'
+	fi
+	if [ "$signalstrength_humanreadable" == "Good" ];then
+		echo '<span foreground="#5E9C19"> ['$ESSID']</span>'
+	fi
+	if [ "$signalstrength_humanreadable" == "Fair" ];then
+		echo '<span foreground="#dae526"> ['$ESSID']</span>'
+	fi
+	if [ "$signalstrength_humanreadable" == "Weak" ];then
+		echo '<span foreground="#E12727"> ['$ESSID']</span>'
+	fi
+fi
+
+if [ "$argument" == "battery_state" ];then
+	echo `acpi | cut -d ' ' -f 3 | tr -d ','`
+fi
+
+if [ "$argument" == "battery_percentage" ];then
+	echo `acpi | cut -d ' ' -f 4 | tr -d ',' | tr -d '%'`
+fi
+
+if [ "$argument" == "battery_timeleft" ];then
+	echo `acpi | cut -d ' ' -f 5 | tr -d ','`
+fi
+
+if [ "$argument" == "battery_timeleft_hours" ];then
+	echo `/home/jake/Programming/Bash/current battery_timeleft | cut -d ':' -f 1 | sed "s/^0*\([1-9]\)/\1/;s/^0*$/0/"`
+fi
+
+if [ "$argument" == "battery_timeleft_minutes" ];then
+	echo `/home/jake/Programming/Bash/current battery_timeleft | cut -d ':' -f 2 | sed "s/^0*\([1-9]\)/\1/;s/^0*$/0/"`
+fi
+
+if [ "$argument" == "battery_timeleft_seconds" ];then
+	echo `/home/jake/Programming/Bash/current battery_timeleft | cut -d ':' -f 3 | sed "s/^0*\([1-9]\)/\1/;s/^0*$/0/"`
+fi
+
+if [ "$argument" == "battery_formatted" ];then
+	state=`/home/jake/Programming/Bash/current battery_state`	
+	if [ "$state" != "Full" ];then
+		if [ "$state" == "Charging" ];then
+			percentage=`/home/jake/Programming/Bash/current battery_percentage`
+			hoursleft=`/home/jake/Programming/Bash/current battery_timeleft_hours`
+			minutesleft=`/home/jake/Programming/Bash/current battery_timeleft_minutes`
+			if [ $hoursleft -gt 0 ];then
+				echo '<span foreground="#00FF00">'$percentage'% '$hoursleft'h '$minutesleft'm</span>'
+			else
+				echo '<span foreground="#00FF00">'$percentage'% '$minutesleft'm</span>'
+			fi
+		fi
+		if [ "$state" == "Discharging" ];then
+			percentage=`/home/jake/Programming/Bash/current battery_percentage`
+			hoursleft=`/home/jake/Programming/Bash/current battery_timeleft_hours`
+			minutesleft=`/home/jake/Programming/Bash/current battery_timeleft_minutes`
+			if [ $hoursleft -gt 0 ];then
+				echo '<span foreground="#FFFFFF">'$percentage'% '$hoursleft'h '$minutesleft'm</span>'
+			else
+				echo '<span foreground="#FF0000">'$percentage'% '$minutesleft'm</span>'
+			fi
+		fi
+	else
+		echo '<span foreground="#00FF00">Full</span>'
+	fi
+fi

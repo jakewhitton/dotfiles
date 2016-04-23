@@ -1,0 +1,6 @@
+#!/bin/bash
+
+sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
+sudo curl -o /etc/pacman.d/mirrorlist https://www.archlinux.org/mirrorlist/all
+sudo reflector --verbose -l 100 --country 'United States' --sort rate --save /etc/pacman.d/mirrorlist
+yaourt -Syu --aur
