@@ -1,0 +1,15 @@
+#!/bin/bash
+
+sudo pacman -Syy > /dev/null 2>&1
+
+availableupdates=`checkupdates | wc -l`
+
+if [ $availableupdates -eq 0 ]
+then
+	echo '<span foreground="#FFFFFF">  '$availableupdates'</span>'
+fi
+
+if [ $availableupdates -gt 0 ]
+then
+	echo '<span foreground="#FF0000">  '$availableupdates'</span>'
+fi

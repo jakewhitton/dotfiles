@@ -1,0 +1,12 @@
+#!/bin/bash
+
+usage=`/home/jake/Programming/Bash/cpuusage`
+
+cpu0=`sensors | grep "Core 0:" | tr -s ' ' | cut -d ' ' -f 3 | tr -d '+°C'`
+cpu1=`sensors | grep "Core 1:" | tr -s ' ' | cut -d ' ' -f 3 | tr -d '+°C'`
+cpu2=`sensors | grep "Core 2:" | tr -s ' ' | cut -d ' ' -f 3 | tr -d '+°C'`
+cpu3=`sensors | grep "Core 3:" | tr -s ' ' | cut -d ' ' -f 3 | tr -d '+°C'`
+
+cpuAverage=`echo "scale=1; ( $cpu0 + $cpu1 + $cpu2 + $cpu3 ) / 4" | bc`
+
+echo "<span foreground='#0000ff'>"$usage"% "$cpuAverage"°C</span>"

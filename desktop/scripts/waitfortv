@@ -1,0 +1,23 @@
+#!/bin/bash
+
+sleep 5
+
+used="no"
+status="init"
+
+while :
+do
+status=`xrandr | grep "HDMI-0" | tr -s ' ' | cut -d ' ' -f 2`
+
+if [ "$used" == "no" ] && [ "$status" == "connected" ];then
+	xrandr --output HDMI-0 --mode 1920x1080 --rate 60.00 --above DP-4
+	used="yes"
+fi
+
+if [ "$used" == "yes" ] && [ "$status" == "disconnected" ];then
+	xrandr --output HDMI-0 --off
+	used="no"
+fi
+
+
+done

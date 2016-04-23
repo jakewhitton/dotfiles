@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#usedMB=`df -m /dev/nvme0n1p2 | grep "/dev/nvme0n1p2" | tr -s ' ' | cut -d ' ' -f 3`
+#totalMB=`df -m /dev/nvme0n1p2 | grep "/dev/nvme0n1p2" | tr -s ' ' | cut -d ' ' -f 2`
+#perc=`df -m /dev/nvme0n1p2 | grep "/dev/nvme0n1p2" | tr -s ' ' | cut -d ' ' -f 5`
+
+#usedGB=`echo "scale=1; $usedMB / 1000" | bc`
+#totalGB=`echo "scale=1; $totalMB / 1000" | bc`
+
+availableMB=`df -m /dev/nvme0n1p2 | grep "/dev/nvme0n1p2" | tr -s ' ' | cut -d ' ' -f 4`
+
+availableGB=`echo "scale=1; $availableMB / 1000" | bc`
+
+echo $availableGB"GB"
