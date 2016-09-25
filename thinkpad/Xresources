@@ -1,0 +1,13 @@
+URxvt*transparent:	true
+URxvt*shading:		10
+
+URxvt.background:	black
+URxvt.foreground:	white
+
+URxvt.scrollBar:	false
+
+URxvt.font:		xft:inconsolata:size=12
+
+URxvt.perl-ext-common: clipboard
+URxvt.keysym.C-c:   perl:clipboard:copy
+URxvt.keysym.C-v:   perl:clipboard:paste
