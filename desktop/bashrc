@@ -1,49 +1,43 @@
 [[ $- != *i* ]] && return
-alias ls='ls --color=auto'
 PS1='[\u@\h \W]\$ '
-
-
-source /home/jake/.git-autocomplete
 
 #USER GLOBAL VARIABLES
 export TIME_FORMAT="%-I:%M:%S%p"
 export DATE_FORMAT="%a %-d/%-m/%Y"
 export PATH=$PATH:/home/jake/Programming/Bash/
-export DEFAULT_SINK=`pactl list sinks | grep -B 3 "Description: Built-in Audio Analog Stereo" | grep "Sink #" | tr -s ' ' | cut -d ' ' -f 2 | tr -d '#'`
+export XAUTHORITY=/home/jake/.Xauthority
 
 #USER ALIASES
 alias cp='sudo cp'
 alias mv='sudo mv'
 alias rm='sudo rm -R'
-alias l='sudo ls --color=auto -Al'
+alias l='sudo ls --color=auto -Alh'
 alias me='sudo chmod a+x'
 alias find='sudo find / -name'
-alias sshpi='sudo ssh jake@99.21.0.25 -p 39901'
-alias reloadInternet='sudo systemctl start dhcpcd@eno1.service'
 alias sd='sudo shutdown now'
 alias rb='sudo reboot'
-alias compile='sudo g++ -o run.exe main.cpp --std=c++11'
-alias compileopengl='sudo g++ -o run.exe main.cpp -lglfw3 -lGL -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -lGLEW --std=c++11'
+alias compile='sudo g++ -o run.exe *.cpp --std=c++11'
+alias compileopengl='sudo g++ -o run.exe main.cpp -lglfw -lGL -lm -lXrandr -lXi -lX11 -lXxf86vm -lpthread -lGLEW --std=c++14'
 alias run='./run.exe'
+alias mkdir='sudo mkdir'
+alias fmrr='xrandr --output DP-4 --mode 1920x1080 --rate 144'
 
-alias mergeXresources='sudo xrdb -merge /home/jake/.config/.Xresources'
+alias mergeXresources='sudo xrdb -load /home/jake/.config/Xresources'
+
+alias cdsandbox='cd /home/jake/Programming/sandbox/C++/'
 
 alias v='sudo vim'
 alias vbashrc='v /home/jake/.bashrc; cp /home/jake/.bashrc /root/.bashrc; bash'
-alias vxinitrc='v /home/jake/.xinitrc; cp /home/jake/.xinitrc /root/.xinitrc'
+alias vxinitrc='v /home/jake/.xinitrc; cp /home/jake/.xinitrc /home/jake/.xsession; cp /home/jake/.xinitrc /root/.xinitrc'
 alias vi3config='v /home/jake/.config/i3/config; cp /home/jake/.config/i3/config /root/.config/i3/config'
-alias vXresources='v /home/jake/.config/.Xresources; cp /home/jake/.config/.Xresources /root/.config/.Xresources; mergeXresources'
-alias vpacmanconf='v /etc/pacman.conf'
+alias vXresources='v /home/jake/.config/Xresources; cp /home/jake/.config/Xresources /root/.config/Xresources; mergeXresources'
 alias vvimrc='v /home/jake/.vimrc; cp /home/jake/.vimrc /root/.vimrc'
 alias vblocks='sudo vim /home/jake/.config/i3blocks/config; cp /home/jake/.config/i3blocks/config /root/.config/i3blocks/config'
 alias vmain='sudo vim ./main.cpp'
 
-alias cdEuler='cd /home/jake/Programming/Euler/; git fetch'
-
-alias pi='sudo pacman -S'
-alias pr='sudo pacman -R'
-alias pu='sudo pacman -U'
-alias psyu='yaourt -Syu --aur'
-
-alias aur='yaourt'
-alias aurUpdate='yaourt -Syu --aur'
+alias cdnotes='cd /home/jake/notes'
+alias cd12='cd /home/jake/notes/12'
+alias cd1='cd /home/jake/notes/12/1_*'
+alias cd2='cd /home/jake/notes/12/2*'
+alias cd3='cd /home/jake/notes/12/3_*'
+alias cd4='cd /home/jake/notes/12/4_*'
