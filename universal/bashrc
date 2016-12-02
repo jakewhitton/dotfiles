@@ -1,0 +1,23 @@
+[[ $- != *i* ]] && return
+PS1='[\u@\h \W]\$ '
+
+#USER GLOBAL VARIABLES
+export TIME_FORMAT="%-I:%M:%S%p"
+export DATE_FORMAT="%a %-d/%-m/%Y"
+export PATH=$PATH:/home/jake/Programming/Bash/
+export XAUTHORITY=/home/jake/.Xauthority
+
+# Pull in unix aliases
+source ~/.aliases/unix
+
+# Pull in vim aliases
+source ~/.aliases/vim
+
+# Pull in programming aliases
+source ~/.aliases/programming
+
+# Pull in Portage aliases
+source ~/.aliases/portage
+
+# Pull in notes aliases
+source ~/.aliases/notes

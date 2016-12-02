@@ -12,3 +12,5 @@ vnoremap j h
 vnoremap k j
 vnoremap l k
 vnoremap ; l
+
+autocmd FileType markdown setlocal shiftwidth=4 tabstop=4 expandtab

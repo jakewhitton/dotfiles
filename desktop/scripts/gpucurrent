@@ -1,9 +1,0 @@
-#!/bin/bash
-
-temp=`nvidia-smi | grep "%" | tr -s ' ' | cut -d ' ' -f 3 | tr -d 'C'`
-#memTotal=`nvidia-smi | grep "%" | tr -s ' ' | cut -d ' ' -f 9 | tr -d 'i'`
-#memUsed=`nvidia-smi | grep "%" | tr -s ' ' | cut -d ' ' -f 11 | tr -d 'i'`
-utilization=`nvidia-smi | grep "%" | tr -s ' ' | cut -d ' ' -f 13 | tr -d '%'`
-
-
-echo "<span foreground='#00ff00'>"$utilization"% "$temp"°C</span>"

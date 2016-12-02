@@ -1,6 +1,0 @@
-#!/bin/bash
-
-format=`cat /home/jake/.bashrc | grep 'TIME_FORMAT' | cut -d '=' -f 2 | tr -d '\"'`
-
-currentdate=`date "+$format"`
-echo "  $currentdate"

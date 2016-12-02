@@ -6,7 +6,7 @@ URxvt.foreground:	white
 
 URxvt.scrollBar:	false
 
-URxvt.font:		xft:inconsolata:size=12
+URxvt.font:		xft:inconsolata:size=14
 
 URxvt.perl-ext-common: clipboard
 URxvt.keysym.C-c:   perl:clipboard:copy

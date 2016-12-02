@@ -1,0 +1,10 @@
+# Aliases related to the launching and usage of the vim editor
+
+alias v='sudo vim'
+alias vbashrc='v /home/jake/.bashrc; cp /home/jake/.bashrc /root/.bashrc; bash'
+alias vxinitrc='v /home/jake/.xinitrc; cp /home/jake/.xinitrc /home/jake/.xsession; cp /home/jake/.xinitrc /root/.xinitrc'
+alias vi3config='v /home/jake/.config/i3/config; cp /home/jake/.config/i3/config /root/.config/i3/config'
+alias vXresources='v /home/jake/.config/Xresources; cp /home/jake/.config/Xresources /root/.config/Xresources; mergeXresources'
+alias vvimrc='v /home/jake/.vimrc; cp /home/jake/.vimrc /root/.vimrc'
+alias vblocks='sudo vim /home/jake/.config/i3blocks/config; cp /home/jake/.config/i3blocks/config /root/.config/i3blocks/config'
+alias vmain='sudo vim ./main.cpp'
