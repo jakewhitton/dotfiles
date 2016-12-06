@@ -11,6 +11,7 @@ alias cd3='cd /home/jake/notes/12/3_*; git pull'
 alias cd4='cd /home/jake/notes/12/4_*; git pull'
 
 # File creation and editing aliases
+alias nn='v "`date $DATE_FORMAT`.md"'
 alias vtodo='v /home/jake/notes/todo.md'
 alias vkeydates='v "/home/jake/notes/keydates.md"'
 
