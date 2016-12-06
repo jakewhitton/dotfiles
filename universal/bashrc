@@ -3,7 +3,7 @@ PS1='[\u@\h \W]\$ '
 
 #USER GLOBAL VARIABLES
 export TIME_FORMAT="%-I:%M:%S%p"
-export DATE_FORMAT="%a %-d/%-m/%Y"
+export DATE_FORMAT="%Y-%m-%d"
 export PATH=$PATH:/home/jake/Programming/Bash/
 export XAUTHORITY=/home/jake/.Xauthority
 
