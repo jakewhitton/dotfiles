@@ -1,17 +1,19 @@
 # Aliases related to 'notes' git repository
 
+export NOTES_DIR="/home/jake/notes"
 
 # Changing directory aliases
-alias cdnotes='cd /home/jake/notes; git pull'
-alias cd12='cd /home/jake/notes/12; git pull'
-alias cdbook='cd /home/jake/notes/Books; git pull'
-alias cd1='cd /home/jake/notes/12/1_*; git pull'
-alias cd2='cd /home/jake/notes/12/2*; git pull'
-alias cd3='cd /home/jake/notes/12/3_*; git pull'
-alias cd4='cd /home/jake/notes/12/4_*; git pull'
+alias cdrepo='cd "${NOTES_DIR}"; git pull'
+alias cdnotes='cd "${NOTES_DIR}/notes"; git pull'
+alias cd12='cd "${NOTES_DIR}/notes/12"; git pull'
+alias cdbook='cd "${NOTES_DIR}/notes/book"; git pull'
+alias cd1='cd "${NOTES_DIR}/notes/12"; cd "1_AP Literature and Composition"; git pull'
+alias cd2='cd "${NOTES_DIR}/notes/12"; cd "2_AP Macroeconomics"; git pull'
+alias cd3='cd "${NOTES_DIR}/notes/12"; cd "3_AP Psychology"; git pull'
+alias cd4='cd "${NOTES_DIR}/notes/12"; cd "4_AP Computer Science: Principles"; git pull'
 
 # File creation and editing aliases
-alias nn='v "`date $DATE_FORMAT`.md"'
+alias nn='v "$(date "+${DATE_FORMAT}").md"'
 alias vtodo='v /home/jake/notes/todo.md'
 alias vkeydates='v "/home/jake/notes/keydates.md"'
 
