@@ -1,8 +1,8 @@
 #Set modifier key to L-Alt
-set $mod Mod1
+set $mod Mod4
 
 #Set font
-font pango:inconsolata 12
+font pango:inconsolata 8
 
 #Set background
 exec_always --no-startup-id feh --bg-scale /home/jake/wallpaper.*
@@ -12,11 +12,11 @@ bindsym $mod+t exec urxvt
 bindsym $mod+g exec chromium
 bindsym $mod+i exec chromium --incognito
 bindsym $mod+d exec --no-startup-id dmenu_run
-bindsym F6 exec --no-startup-id sudo /home/jake/Programming/Bash/decreaseBrightness
-bindsym F7 exec --no-startup-id sudo /home/jake/Programming/Bash/increaseBrightness
-bindsym F8 exec pactl set-sink-mute 0 toggle
-bindsym F9 exec pactl set-sink-volume 0 -1%
-bindsym F10 exec pactl set-sink-volume 0 +1%
+bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -1%
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +1%
+bindsym XF86MonBrightnessDown exec /home/jake/programming/shell/brightness dec
+bindsym XF86MonBrightnessUp exec /home/jake/programming/shell/brightness inc
 
 bindsym $mod+h split h
 bindsym $mod+v split v

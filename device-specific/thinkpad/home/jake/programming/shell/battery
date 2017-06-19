@@ -1,0 +1,135 @@
+#!/bin/sh
+
+BAT0_PATH="/sys/class/power_supply/BAT0"
+BAT1_PATH="/sys/class/power_supply/BAT1"
+
+BAT0_uevent=`cat "${BAT0_PATH}/uevent"`
+BAT1_uevent=`cat "${BAT1_PATH}/uevent"`
+
+
+BAT0_state=`echo "$BAT0_uevent" | grep "POWER_SUPPLY_STATUS=" | cut -d "=" -f 2`
+BAT1_state=`echo "$BAT1_uevent" | grep "POWER_SUPPLY_STATUS=" | cut -d "=" -f 2`
+
+calculate () {
+	result=`echo "scale=${2}; ${1}" | bc`
+	echo "$result"
+}
+
+convert() {
+	result=`echo "scale=1; ${1} / 1000000" | bc`
+	echo "$result"
+}
+
+fetch_min () {
+	# NOTE: Keeping this as a function so that discharge thresholds can be used later
+	BAT0_min=0
+	BAT1_min=0
+	min=`calculate "${BAT0_min} + ${BAT1_min}" 1`
+	echo "$min"
+}
+
+fetch_max () {
+	BAT0_max=`echo "$BAT0_uevent" | grep "POWER_SUPPLY_ENERGY_FULL=" | cut -d "=" -f 2`
+	BAT1_max=`echo "$BAT1_uevent" | grep "POWER_SUPPLY_ENERGY_FULL=" | cut -d "=" -f 2`
+	max=`calculate "${BAT0_max} + ${BAT1_max}" 1`
+	echo "$max"
+}
+
+fetch_power () {
+	BAT0_power=`echo "$BAT0_uevent" | grep "POWER_SUPPLY_POWER_NOW=" | cut -d "=" -f 2`
+	if [ -z "$BAT0_power" ]; then
+		BAT0_power=0
+	fi
+
+	BAT1_power=`echo "$BAT1_uevent" | grep "POWER_SUPPLY_POWER_NOW=" | cut -d "=" -f 2`
+	if [ -z "$BAT1_power" ]; then
+		BAT1_power=0
+	fi
+
+	power=`calculate "${BAT0_power} + ${BAT1_power}" 1`
+	echo "$power"
+}
+
+fetch_current () {
+	BAT0_current=`echo "$BAT0_uevent" | grep "POWER_SUPPLY_ENERGY_NOW=" | cut -d "=" -f 2`
+	if [ -z "$BAT0_current" ]; then
+		BAT0_current=0
+	fi
+
+	BAT1_current=`echo "$BAT1_uevent" | grep "POWER_SUPPLY_ENERGY_NOW=" | cut -d "=" -f 2`
+	if [ -z "$BAT1_current" ]; then
+		BAT1_current=0
+	fi
+
+	current=`calculate "${BAT0_current} + ${BAT1_current}" 1`
+	echo "$current"
+}
+
+fetch_icon () {
+	current=`fetch_current`
+	max=`fetch_max`
+	ratio=$(( current * 100 / max ))
+
+	if [ $ratio -ge 0 ] && [ $ratio -lt 13 ]; then
+		echo ""
+	elif [ $ratio -ge 13 ] && [ $ratio -lt 38  ]; then
+		echo ""
+	elif [ $ratio -ge 38 ] && [ $ratio -lt 53 ]; then
+		echo ""
+	elif [ $ratio -ge 53 ] && [ $ratio -lt 78 ]; then
+		echo ""
+	elif [ $ratio -ge 78 ] && [ $ratio -le 100 ]; then
+		echo ""
+	else
+		echo ""
+	fi
+}
+
+charging () {
+	chargingrate=`fetch_power` #Note that the total POWER_NOW is actually the charge rate, not the discharge rate, when charging
+	current=`fetch_current`
+	max=`fetch_max`
+
+	remaining=`calculate "${max} - ${current}" 0`
+	hoursLeft=`calculate "(${max} - ${current}) / ${chargingrate}" 1`
+	percentage=`calculate "$current * 100 / $max" 1`
+
+	printf "<span foreground='#00FF00'>%s %sWh/%sWh[%s%%] %sh</span>\n" `fetch_icon` `convert $current` `convert $max` $percentage $hoursLeft
+}
+
+discharging () {
+	dischargerate=`fetch_power`
+	current=`fetch_current`
+	min=`fetch_min`
+	max=`fetch_max`
+
+	hoursLeft=`calculate "(${current} - ${min}) / ${dischargerate}" 1`
+	percentage=`calculate "${current} * 100 / ${max}" 1`
+
+	printf "%s %sWh/%sWh[%s%%] %sW %sh\n" `fetch_icon` `convert $current` `convert $max` $percentage `convert $dischargerate` $hoursLeft
+}
+
+full () {
+	echo "Full"
+}
+
+unknown () {
+	echo "Unknown"
+}
+
+
+state=""
+if [ "$BAT0_state" == "Charging" ] || [ "$BAT1_state" == "Charging" ]; then
+	state="charging"
+elif [ "$BAT0_state" == "Discharging" ] || [ "$BAT1_state" == "Discharging" ]; then
+	state="discharging"
+elif [ "$BAT0_state" == "Full" ] || [ "$BAT1_state" == "Full" ]; then
+	state="full"
+fi
+
+case "$state" in
+	"charging") 	charging;;
+	"discharging") 	discharging;;
+	"full") 	full;;
+	*) 		unknown;;
+esac

@@ -1,0 +1,45 @@
+#!/bin/sh
+
+BACKLIGHT_PATH="/sys/class/backlight/intel_backlight"
+
+min=0
+max=`cat "${BACKLIGHT_PATH}/max_brightness"`
+current=`cat "${BACKLIGHT_PATH}/brightness"`
+
+
+USAGE() {
+	echo "Error: invalid usage."
+	echo "USAGE: brightness [inc | dec | format]"
+	exit
+}
+
+increaseBrightness() {
+	if [ $current -lt $max ]; then
+		newBrightness=$(( current + 1 ))
+		sudo /home/jake/programming/shell/backlight_set $newBrightness
+	fi
+}
+
+decreaseBrightness() {
+	if [ $current -gt $min ]; then
+		newBrightness=$(( current - 1 ))
+		sudo /home/jake/programming/shell/backlight_set $newBrightness
+	fi
+}
+
+outputFormatted() {
+	percentage=`echo "scale=1; ${current} * 100 / ${max}" | bc`
+	printf " %s/%s[%s%%]" $current $max $percentage
+}
+
+if [ $# -ne 1 ]; then
+	USAGE
+elif [ "$1" == "inc" ]; then
+	increaseBrightness
+elif [ "$1" == "dec" ]; then
+	decreaseBrightness
+elif [ "$1" == "format" ]; then
+	outputFormatted
+else
+	USAGE
+fi

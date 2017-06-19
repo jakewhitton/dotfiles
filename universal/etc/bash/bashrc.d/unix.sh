@@ -2,10 +2,10 @@
 alias cp='sudo cp -R'
 alias mv='sudo mv'
 alias rm='sudo rm -R'
-alias l='sudo ls --color=auto -Alh'
-alias me='sudo chmod a+x' # Make executable
+alias l='ls --color=auto -Alh'
+alias me='sudo chmod +x' # Make executable
 alias find='sudo find / -name'
 alias sd='sudo shutdown now'
 alias rb='sudo reboot'
-alias mkdir='sudo mkdir'
-alias mergeXresources='sudo xrdb -load /home/jake/.config/Xresources'
+alias mkdir='sudo -u jake mkdir'
+alias mergeXresources='sudo xrdb -load /etc/X11/xinit/Xresources'

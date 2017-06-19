@@ -1,0 +1,8 @@
+#!/bin/sh
+
+BACKLIGHT_PATH="/sys/class/backlight/intel_backlight"
+
+
+if [ $# -eq 1 ]; then
+	echo $1 > ${BACKLIGHT_PATH}/brightness
+fi

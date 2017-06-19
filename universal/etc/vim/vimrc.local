@@ -1,3 +1,5 @@
+let &rtp .= ','.expand('/etc/vim')
+
 set number
 colorscheme molokai
 syntax on

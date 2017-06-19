@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+	echo "Bitch, I need an argument"
+	exit -1
+fi
+
+sudo vim "/etc/bash/bashrc.d/${1}.sh"
