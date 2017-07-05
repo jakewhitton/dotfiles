@@ -29,7 +29,7 @@ fi
 if [ -n "$failsafe" ]; then
  #USER COMMANDS HERE
 
- exec ck-launch-session i3 -c /home/jake/.config/i3/config # Start i3
+ exec i3 # Start i3
 else
  exec $command
 fi
