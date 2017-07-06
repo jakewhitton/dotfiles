@@ -1,0 +1,36 @@
+#!/bin/sh
+
+device="wlp4s0"
+
+connectionStatus=`nmcli --terse --fields DEVICE,STATE,CONNECTION device | grep "$device"`
+
+status=`echo "$connectionStatus" | cut -d ":" -f 2`
+network=`echo "$connectionStatus" | cut -d ":" -f 3`
+
+connected () {
+	echo " ${network}"
+}
+
+disabled () {
+	echo "Wi-Fi Disabled"
+}
+
+disconnected () {
+	echo "No network"
+}
+
+configuring () {
+	echo "Connecting..."
+}
+
+unknown () {
+	echo "Wi-Fi status unknown"
+}
+
+case "$status" in
+	"connected")			connected;;
+	"unavailable")			disabled;;
+	"disconnected")			disconnected;;
+	"connecting (configuring)")	configuring;;
+	*)				unknown;;
+esac

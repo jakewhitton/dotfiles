@@ -32,7 +32,11 @@ outputFormatted() {
 	printf " %s/%s[%s%%]" $current $max $percentage
 }
 
-if [ $# -ne 1 ]; then
+setBrightness() {
+	sudo /home/jake/programming/shell/backlight_set $1
+}
+
+if [ $# -ne 1 ] && [ $# -ne 2 ]; then
 	USAGE
 elif [ "$1" == "inc" ]; then
 	increaseBrightness
@@ -40,6 +44,8 @@ elif [ "$1" == "dec" ]; then
 	decreaseBrightness
 elif [ "$1" == "format" ]; then
 	outputFormatted
+elif [ "$1" == "set" ]; then
+	setBrightness $2
 else
 	USAGE
 fi

@@ -1,0 +1,20 @@
+#!/bin/sh
+
+listsinks=`pactl list sinks | grep -A 6 "Description: Built-in Audio Analog Stereo"`
+
+volume=`echo "$listsinks" | grep "Volume:" | tr -s " " | cut -d " " -f 5 | tr -d '%'`
+mute=`echo "$listsinks" | grep "Mute:" | tr -s " " | cut -d " " -f 2`
+
+icon=""
+
+if [ "$mute" == "yes" ]; then
+	icon=""
+elif [ $volume -eq 0 ]; then
+	icon=""
+elif [ $volume -gt 0 ] && [ $volume -lt 50 ]; then
+	icon=""
+elif [ $volume -ge 50 ]; then
+	icon=""
+fi
+
+echo "${icon} [${volume}%]"

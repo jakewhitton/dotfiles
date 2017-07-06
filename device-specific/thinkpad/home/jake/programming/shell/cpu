@@ -1,0 +1,11 @@
+#!/bin/sh
+
+sensors=`sensors | grep -A 4 "coretemp-isa-0000"`
+
+core_0_temp=`echo "$sensors" | grep "Core 0:" | tr -s " " | cut -d " " -f 3 | tr -d "+°C"`
+core_1_temp=`echo "$sensors" | grep "Core 1:" | tr -s " " | cut -d " " -f 3 | tr -d "+°C"`
+
+
+avg_temp=`echo "scale=1; (${core_0_temp} + ${core_1_temp}) / 2" | bc`
+
+echo "<span foreground='#6666ff'>${avg_temp}°C</span>"
