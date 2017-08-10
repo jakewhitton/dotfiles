@@ -5,4 +5,4 @@ if [ -z "$1" ]; then
 	exit -1
 fi
 
-sudo vim "/etc/bash/bashrc.d/${1}.sh"
+vim "/home/jake/programming/shell/aliases/${1}"
