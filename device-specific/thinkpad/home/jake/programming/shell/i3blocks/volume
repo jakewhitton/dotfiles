@@ -1,5 +1,15 @@
 #!/bin/sh
 
+if [ ! -z $BLOCK_BUTTON ]; then
+	case $BLOCK_BUTTON in
+		1) pactl set-sink-volume 0 -1%  ;;
+		2) pactl set-sink-mute 0 toggle ;;
+		3) pactl set-sink-volume 0 +1%  ;;
+		6) pactl set-sink-volume 0 -5%  ;;
+		7) pactl set-sink-volume 0 +5%  ;;
+	esac
+fi
+
 listsinks=`pactl list sinks | grep -A 6 "Description: Built-in Audio Analog Stereo"`
 
 volume=`echo "$listsinks" | grep "Volume:" | tr -s " " | cut -d " " -f 5 | tr -d '%'`

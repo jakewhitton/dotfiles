@@ -1,11 +1,5 @@
 #!/bin/sh
 
-BACKLIGHT_PATH="/sys/class/backlight/intel_backlight"
-
-max=`cat "${BACKLIGHT_PATH}/max_brightness"`
-current=`cat "${BACKLIGHT_PATH}/brightness"`
-percentage=$(( current * 100 / max ))
-
 if [ ! -z "$BLOCK_BUTTON" ]; then
 	case $BLOCK_BUTTON in
 		1) brightness dec 1  ;;
@@ -14,5 +8,11 @@ if [ ! -z "$BLOCK_BUTTON" ]; then
 		7) brightness inc 25 ;;
 	esac
 fi
+
+BACKLIGHT_PATH="/sys/class/backlight/intel_backlight"
+
+max=`cat "${BACKLIGHT_PATH}/max_brightness"`
+current=`cat "${BACKLIGHT_PATH}/brightness"`
+percentage=$(( current * 100 / max ))
 
 printf " %s/%s[%s%%]\n" $current $max $percentage
