@@ -9,43 +9,53 @@ current=`cat "${BACKLIGHT_PATH}/brightness"`
 
 USAGE() {
 	echo "Error: invalid usage."
-	echo "USAGE: brightness [inc | dec | format]"
+	echo "USAGE: brightness inc|dec|set [number]"
 	exit
 }
 
+withinBounds() {
+	if [ $1 -ge $min ] && [ $1 -le $max ]; then
+		echo "yes"
+	else
+		echo "no"
+	fi
+}
+
 increaseBrightness() {
-	if [ $current -lt $max ]; then
-		newBrightness=$(( current + 1 ))
+	# If user does not supply an amount to increase by, then it is set to 1
+	newBrightness=$(( $current + $1 ))
+	if [ `withinBounds $newBrightness` == "yes" ]; then
 		sudo /home/jake/programming/shell/backlight_set $newBrightness
 	fi
 }
 
 decreaseBrightness() {
-	if [ $current -gt $min ]; then
-		newBrightness=$(( current - 1 ))
+	# If user does not supply an amount to decrease by, then it is set to 1
+	newBrightness=$(( $current - $1 ))
+	if [ `withinBounds $newBrightness` == "yes" ]; then
 		sudo /home/jake/programming/shell/backlight_set $newBrightness
 	fi
 }
 
-outputFormatted() {
-	percentage=`echo "scale=1; ${current} * 100 / ${max}" | bc`
-	printf " %s/%s[%s%%]" $current $max $percentage
-}
-
 setBrightness() {
-	sudo /home/jake/programming/shell/backlight_set $1
+	if [ `withinBounds $1` == "yes" ]; then
+		sudo /home/jake/programming/shell/backlight_set $1
+	fi
 }
 
-if [ $# -ne 1 ] && [ $# -ne 2 ]; then
-	USAGE
-elif [ "$1" == "inc" ]; then
-	increaseBrightness
-elif [ "$1" == "dec" ]; then
-	decreaseBrightness
-elif [ "$1" == "format" ]; then
-	outputFormatted
-elif [ "$1" == "set" ]; then
-	setBrightness $2
+if [ $# -eq 1 ]; then
+	case $1 in
+		"inc") increaseBrightness 1;;
+		"dec") decreaseBrightness 1;;
+		*) USAGE;;
+	esac
+elif [ $# -eq 2 ]; then
+	case $1 in
+		"inc") increaseBrightness $2;;
+		"dec") decreaseBrightness $2;;
+		"set") setBrightness $2;;
+		*) USAGE;;
+	esac
 else
 	USAGE
 fi
