@@ -2,15 +2,14 @@
 set $mod Mod4
 
 #Set font
-font pango:inconsolata 8
+font pango:Inconsolata 12
 
 #Set background
 exec_always --no-startup-id feh --bg-scale /home/jake/wallpaper.*
 
 #User keybindings
-bindsym $mod+t exec urxvt
-bindsym $mod+g exec chromium
-bindsym $mod+i exec chromium --incognito
+bindsym $mod+t exec st
+bindsym $mod+i exec firefox
 bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -1%
