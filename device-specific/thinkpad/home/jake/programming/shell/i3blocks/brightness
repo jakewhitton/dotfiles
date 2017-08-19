@@ -3,6 +3,7 @@
 if [ ! -z "$BLOCK_BUTTON" ]; then
 	case $BLOCK_BUTTON in
 		1) brightness dec 1  ;;
+		2) brightnessGUI     ;; # Launches a python script that creates a GUI for adjusting brightness
 		3) brightness inc 1  ;;
 		6) brightness dec 25 ;;
 		7) brightness inc 25 ;;
