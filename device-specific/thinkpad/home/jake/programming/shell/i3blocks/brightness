@@ -10,10 +10,8 @@ if [ ! -z "$BLOCK_BUTTON" ]; then
 	esac
 fi
 
-BACKLIGHT_PATH="/sys/class/backlight/intel_backlight"
-
-max=`cat "${BACKLIGHT_PATH}/max_brightness"`
-current=`cat "${BACKLIGHT_PATH}/brightness"`
+max=`brightness info max`
+current=`brightness info current`
 percentage=$(( current * 100 / max ))
 
 printf " %s/%s[%s%%]\n" $current $max $percentage

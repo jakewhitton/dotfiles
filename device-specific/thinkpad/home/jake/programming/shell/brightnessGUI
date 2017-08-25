@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+from tkinter import *
+from subprocess import check_output, call
+
+minBrightness     = int(check_output(["brightness", "info", "min"]).decode("utf-8").rstrip())
+initialBrightness = int(check_output(["brightness", "info", "current"]).decode("utf-8").rstrip())
+maxBrightness     = int(check_output(["brightness", "info", "max"]).decode("utf-8").rstrip())
+
+def sliderMove(event):
+    newBrightness = str(slider.get())
+    call(["brightness", "set", newBrightness])
+
+def forceClose():
+    call(["brightness", "set", str(initialBrightness)])
+    root.destroy()
+
+def setButtonPressed(event=None):
+    root.destroy()
+
+root = Tk()
+root.wm_title("Brightness Adjustment")
+root.resizable(width=False, height=False)
+root.geometry('{}x{}'.format(300, 100))
+
+
+slider = Scale(root, from_=minBrightness, to=maxBrightness, resolution=1, orient=HORIZONTAL, command=sliderMove)
+slider.set(float(initialBrightness))
+slider.grid(row=0, column=0, columnspan=2, padx=10, sticky=W+E)
+root.columnconfigure(0, weight=1)
+
+
+submitButton = Button(root, text="Set", command=setButtonPressed)
+submitButton.grid(row=1, column=1, sticky=SE, pady=10, padx=10)
+root.rowconfigure(1, weight=1)
+
+root.bind_all("<Return>", setButtonPressed)
+
+root.protocol("WM_DELETE_WINDOW", forceClose)
+
+root.mainloop()

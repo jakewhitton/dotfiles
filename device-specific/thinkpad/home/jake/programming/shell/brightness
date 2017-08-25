@@ -9,7 +9,7 @@ current=`cat "${BACKLIGHT_PATH}/brightness"`
 
 USAGE() {
 	echo "Error: invalid usage."
-	echo "USAGE: brightness inc|dec|set [number]"
+	echo "USAGE: brightness inc|dec|set|info [number|member]"
 	exit
 }
 
@@ -43,18 +43,27 @@ setBrightness() {
 	fi
 }
 
+info() {
+	case $1 in
+		"min")     echo $min     ;;
+		"max")     echo $max     ;;
+		"current") echo $current ;;
+	esac
+}
+
 if [ $# -eq 1 ]; then
 	case $1 in
 		"inc") increaseBrightness 1;;
 		"dec") decreaseBrightness 1;;
-		*) USAGE;;
+		*)     USAGE;;
 	esac
 elif [ $# -eq 2 ]; then
 	case $1 in
-		"inc") increaseBrightness $2;;
-		"dec") decreaseBrightness $2;;
-		"set") setBrightness $2;;
-		*) USAGE;;
+		"inc")  increaseBrightness $2;;
+		"dec")  decreaseBrightness $2;;
+		"set")  setBrightness $2;;
+		"info") info $2;;
+		*)      USAGE;;
 	esac
 else
 	USAGE
