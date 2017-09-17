@@ -6,5 +6,4 @@ alias l='ls --color=auto -Alh'
 alias me='sudo chmod +x' # Make executable
 alias sd='sudo shutdown now'
 alias rb='sudo reboot'
-alias mkdir='sudo -u jake mkdir'
 alias mergeXresources='sudo xrdb -load /etc/X11/xinit/Xresources'

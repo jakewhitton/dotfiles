@@ -1,0 +1,10 @@
+# Aliases related to gtd
+
+
+alias t='todo.sh -d /home/jake/.config/todo.txt/config'
+source /home/jake/.config/todo.txt/todo_completion
+complete -F _todo t
+
+export TODOTXT_DEFAULT_ACTION=ls
+
+alias vtodoconfig='sudo vim /home/jake/.config/todo.txt/config'
