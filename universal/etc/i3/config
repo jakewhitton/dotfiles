@@ -2,7 +2,7 @@
 set $mod Mod4
 
 #Set font
-font pango:Inconsolata Nerd Font 9
+font pango:Inconsolata Nerd Font 13
 
 #Set background
 exec_always --no-startup-id feh --bg-scale /home/jake/wallpaper.*

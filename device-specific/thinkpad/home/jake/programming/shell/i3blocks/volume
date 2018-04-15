@@ -27,4 +27,4 @@ elif [ $volume -ge 50 ]; then
 	icon=""
 fi
 
-echo " ${icon} [${volume}%]"
+echo "${icon} [${volume}%]"
