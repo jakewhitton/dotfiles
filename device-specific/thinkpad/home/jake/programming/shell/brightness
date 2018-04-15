@@ -2,6 +2,7 @@
 
 BACKLIGHT_PATH="/sys/class/backlight/intel_backlight"
 
+
 min=0
 max=`cat "${BACKLIGHT_PATH}/max_brightness"`
 current=`cat "${BACKLIGHT_PATH}/brightness"`

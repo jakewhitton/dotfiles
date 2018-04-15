@@ -1,0 +1,9 @@
+# Aliases useful for classes
+
+export CLASSES_DIR='/home/jake/programming/repos/classes'
+
+alias cd608="cd ${CLASSES_DIR}/6.08"
+alias cd60001="cd ${CLASSES_DIR}/6.0001"
+
+alias ssh608='ssh jwhitton@iesc-s1.mit.edu'
+alias sftp608='sftp jwhitton@iesc-s1.mit.edu'

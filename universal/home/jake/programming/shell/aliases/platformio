@@ -1,0 +1,5 @@
+# Aliases related to platformio/6.08
+
+alias pfio='platformio'
+
+alias pfioinit='platformio init --board esp32dev'
