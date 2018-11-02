@@ -1,9 +1,8 @@
 # Aliases useful for classes
 
-export CLASSES_DIR='/home/jake/programming/repos/classes'
+export CLASSES_DIR='/home/jake/programming/repos/classes/college/sophomore_fall'
 
-alias cd608="cd ${CLASSES_DIR}/6.08"
-alias cd60001="cd ${CLASSES_DIR}/6.0001"
-
-alias ssh608='ssh jwhitton@iesc-s1.mit.edu'
-alias sftp608='sftp jwhitton@iesc-s1.mit.edu'
+alias cd60002="cd ${CLASSES_DIR}/6.0002"
+alias cd6006="cd ${CLASSES_DIR}/6.006"
+alias cd6009="cd ${CLASSES_DIR}/6.009"
+alias cd24241="cd ${CLASSES_DIR}/24.241"

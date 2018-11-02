@@ -1,0 +1,30 @@
+#!/bin/sh
+
+if [ ! -z $BLOCK_BUTTON ]; then
+	case $BLOCK_BUTTON in
+		1) pactl set-sink-volume 0 -1%  ;;
+		2) pactl set-sink-mute 0 toggle ;;
+		3) pactl set-sink-volume 0 +1%  ;;
+		5) pactl set-sink-volume 0 -5%  ;;
+		4) pactl set-sink-volume 0 +5%  ;;
+	esac
+fi
+
+listsinks=`pactl list sinks | grep -A 9 "Sink #0"`
+
+volume=`echo "$listsinks" | grep "Volume:" | tr -s " " | cut -d " " -f 5 | tr -d '%'`
+mute=`echo "$listsinks" | grep "Mute:" | tr -s " " | cut -d " " -f 2`
+
+icon=""
+
+if [ "$mute" == "yes" ]; then
+	icon=""
+elif [ $volume -eq 0 ]; then
+	icon=""
+elif [ $volume -gt 0 ] && [ $volume -lt 50 ]; then
+	icon=""
+elif [ $volume -ge 50 ]; then
+	icon=""
+fi
+
+echo "${icon}[${volume}%]"
