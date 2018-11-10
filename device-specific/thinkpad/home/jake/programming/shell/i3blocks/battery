@@ -94,7 +94,7 @@ charging () {
 	hoursLeft=`calculate "(${max} - ${current}) / ${chargingrate}" 1`
 	percentage=`calculate "$current * 100 / $max" 1`
 
-	printf "<span foreground='#00FF00'>%s %sWh/%sWh[%s%%] %sh</span>\n" `fetch_icon` `convert $current` `convert $max` $percentage $hoursLeft
+	printf "<span foreground='#00FF00'>%s.%sWh/%sWh[%s%%] %sh</span>\n" `fetch_icon` `convert $current` `convert $max` $percentage $hoursLeft
 }
 
 discharging () {
@@ -106,7 +106,7 @@ discharging () {
 	hoursLeft=`calculate "(${current} - ${min}) / ${dischargerate}" 1`
 	percentage=`calculate "${current} * 100 / ${max}" 1`
 
-	printf "%s %sWh/%sWh[%s%%] %sW %sh\n" `fetch_icon` `convert $current` `convert $max` $percentage `convert $dischargerate` $hoursLeft
+	printf "%s.%sWh/%sWh[%s%%] %sW %sh\n" `fetch_icon` `convert $current` `convert $max` $percentage `convert $dischargerate` $hoursLeft
 }
 
 full () {

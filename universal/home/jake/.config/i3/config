@@ -1,5 +1,5 @@
 #Set modifier key to L-Alt
-set $mod Mod1
+set $mod Mod4
 
 #Set font
 font pango:Inconsolata Nerd Font 13
@@ -8,7 +8,7 @@ font pango:Inconsolata Nerd Font 13
 exec_always --no-startup-id feh --bg-scale /home/jake/wallpaper.*
 
 #User keybindings
-bindsym $mod+t exec alacritty
+bindsym $mod+t exec gnome-terminal
 bindsym $mod+i exec firefox
 bindsym $mod+d exec --no-startup-id dmenu_run
 bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle

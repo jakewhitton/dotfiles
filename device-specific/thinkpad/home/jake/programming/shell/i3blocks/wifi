@@ -1,6 +1,6 @@
 #!/bin/sh
 
-device="wlp4s0"
+device="wlp3s0"
 
 connectionStatus=`nmcli --terse --fields DEVICE,STATE,CONNECTION device | grep "$device"`
 
@@ -8,7 +8,7 @@ status=`echo "$connectionStatus" | cut -d ":" -f 2`
 network=`echo "$connectionStatus" | cut -d ":" -f 3`
 
 connected () {
-	echo " ${network}"
+	echo ".${network}"
 }
 
 disabled () {
