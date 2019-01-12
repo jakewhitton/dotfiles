@@ -14,4 +14,4 @@ max=`brightness info max`
 current=`brightness info current`
 percentage=$(( current * 100 / max ))
 
-printf ".%s/%s[%s%%]\n" $current $max $percentage
+printf " %s/%s[%s%%]\n" $current $max $percentage
