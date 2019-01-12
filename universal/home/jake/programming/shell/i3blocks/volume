@@ -18,7 +18,7 @@ mute=`echo "$listsinks" | grep "Mute:" | tr -s " " | cut -d " " -f 2`
 icon=""
 
 if [ "$mute" == "yes" ]; then
-	icon=""
+	icon=""
 elif [ $volume -eq 0 ]; then
 	icon=""
 elif [ $volume -gt 0 ] && [ $volume -lt 50 ]; then
@@ -27,4 +27,4 @@ elif [ $volume -ge 50 ]; then
 	icon=""
 fi
 
-echo "${icon}.[${volume}%]"
+echo "${icon} [${volume}%]"
