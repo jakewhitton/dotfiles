@@ -7,3 +7,7 @@ vnoremap j h
 vnoremap k j
 vnoremap l k
 vnoremap ; l
+
+color molokai
+
+set number
