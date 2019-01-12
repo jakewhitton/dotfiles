@@ -5,6 +5,8 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
+export PATH="$PATH:/home/jake/programming/shell"
+
 for file in /home/jake/programming/shell/aliases/*
 do
 	source "$file"
