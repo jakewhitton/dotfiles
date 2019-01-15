@@ -46,3 +46,9 @@
 (if (daemonp)
     (add-hook 'after-make-frame-functions 'apply-theme-to-frame)
     (apply-theme-to-frame (selected-frame)))
+
+(require 'org)
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-cc" 'org-capture)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
