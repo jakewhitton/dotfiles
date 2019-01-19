@@ -38,6 +38,7 @@ fi
 
 if [ -n "$failsafe" ]; then
  setxkbmap -option ctrl:nocaps     # Swap Left Control and Caps Lock
+ dropbox start &
  exec i3
 else
  exec $command
