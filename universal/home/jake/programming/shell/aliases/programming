@@ -3,3 +3,5 @@
 # Compilation and execution aliases
 alias compile='sudo g++ -o run.exe *.cpp --std=c++11'
 alias run='./run.exe'
+
+alias cddotfiles='cd /home/jake/programming/repos/dotfiles'
