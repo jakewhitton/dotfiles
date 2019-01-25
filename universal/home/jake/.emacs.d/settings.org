@@ -25,9 +25,7 @@
 ** Disable menubar, toolbar, and scrollbar
 #+BEGIN_SRC emacs-lisp
 (menu-bar-mode -1)
-
 (tool-bar-mode -1)
-
 (scroll-bar-mode -1)
 #+END_SRC
 
@@ -42,7 +40,6 @@
 #+END_SRC
 
 *** Apply solarized-dark
-
 #+BEGIN_SRC emacs-lisp
 (defun apply-theme-to-frame (frame)
     (select-frame frame)
@@ -56,7 +53,13 @@
 
 ** Font
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(font . "Inconsolata-22"))
+(add-to-list 'default-frame-alist '(font . "Inconsolata-16"))
+#+END_SRC
+
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+(when (version<= "26.0.50" emacs-version)
+  (global-display-line-numbers-mode))
 #+END_SRC
 
 * Org-Mode
@@ -71,9 +74,10 @@
 			     "/home/jake/org/tickler.org"))
 (setq org-todo-keywords
   '((sequence
-       "TODO"
-       "PROJECT"
+       "TODO(t)"
+       "PROJECT(p)"
+       "WAITING(w)"
        "|"
-       "DONE"
-       "CANCELLED")))
+       "DONE(d)"
+       "CANCELLED(c)")))
 #+END_SRC
