@@ -20,7 +20,6 @@
   (add-to-list 'load-path "/home/jake/.emacs.d/elpa")
   (require 'use-package))
 #+END_SRC
-
 * Visual customization
 ** Disable menubar, toolbar, and scrollbar
 #+BEGIN_SRC emacs-lisp
@@ -65,13 +64,18 @@
 * Org-Mode
 #+BEGIN_SRC emacs-lisp
 (require 'org)
+
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-cc" 'org-capture)
 (define-key global-map "\C-ca" 'org-agenda)
+
 (setq org-log-done t)
+
 (setq org-agenda-files (list "/home/jake/org/inbox.org"
 			     "/home/jake/org/projects.org"
-			     "/home/jake/org/tickler.org"))
+			     "/home/jake/org/tickler.org"
+			     "/home/jake/org/someday.org"))
+
 (setq org-todo-keywords
   '((sequence
        "TODO(t)"
@@ -80,4 +84,24 @@
        "|"
        "DONE(d)"
        "CANCELLED(c)")))
+
+(setq org-return-follows-link t)
+
+(setq org-refile-targets (quote (("projects.org" :maxlevel . 9)
+                                 ("someday.org" :maxlevel . 9)
+				 ("tickler.org" :maxlevel . 9))))
+
+#+END_SRC
+* C Mode
+#+BEGIN_SRC emacs-lisp
+(setq-default c-basic-offset 4
+              tab-width 4
+              indent-tabs-mode t
+			  c-default-style "bsd")
+#+END_SRC
+* EXWM
+#+BEGIN_SRC emacs-lisp
+(require 'exwm)
+(require 'exwm-config)
+(exwm-config-default)
 #+END_SRC
