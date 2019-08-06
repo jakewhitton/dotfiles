@@ -1,12 +1,11 @@
-nnoremap j h
-nnoremap k j
-nnoremap l k
-nnoremap ; l
+noremap t j
+noremap n k
+noremap s l
 
-vnoremap j h
-vnoremap k j
-vnoremap l k
-vnoremap ; l
+noremap j t
+noremap k s
+noremap l n
+noremap L N
 
 color molokai
 
