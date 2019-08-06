@@ -8,7 +8,7 @@ font pango:Inconsolata Nerd Font 13
 exec_always --no-startup-id feh --bg-scale /home/jake/wallpaper.*
 
 #User keybindings
-bindsym $mod+t exec gnome-terminal
+bindsym $mod+c exec gnome-terminal
 bindsym $mod+i exec firefox
 bindsym $mod+e exec emacsclient -c
 bindsym $mod+d exec --no-startup-id dmenu_run
@@ -18,14 +18,16 @@ bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +1%
 bindsym XF86MonBrightnessDown exec /home/jake/programming/shell/brightness dec
 bindsym XF86MonBrightnessUp exec /home/jake/programming/shell/brightness inc
 
-bindsym $mod+h split h
-bindsym $mod+v split v
+#bindsym $mod+shift+h split h
+#bindsym $mod+shift+v split v
 
 #Set borders to 1pixel
 new_window 1pixel
 
 #for_window
 for_window [window_role="GtkFileChooserDialog"] floating enable; resize shrink width 10000px; resize grow width 400px; resize shrink height 10000px; resize grow height 800px;
+for_window [class="Eclipse"] floating disable
+#for_window [class="run.exe"] floating enable
 
 #Workspace name declarations
 set $ws1 "1. Web"
@@ -59,20 +61,20 @@ bindsym $mod+r mode "resize"
 bindsym $mod+Shift+q kill
 
 #Keybinds for changing focus
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+semicolon focus right
+bindsym $mod+h focus left
+bindsym $mod+t focus down
+bindsym $mod+n focus up
+bindsym $mod+s focus right
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
 bindsym $mod+Right focus right
 
 #Keybinds for moving windows
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+t move down
+bindsym $mod+Shift+n move up
+bindsym $mod+Shift+s move right
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
@@ -93,10 +95,10 @@ bindsym $mod+f fullscreen toggle
 
 #Resize mode
 mode "resize" {
-        bindsym j resize shrink width 1 px or 1 ppt
-        bindsym k resize grow height 1 px or 1 ppt
-        bindsym l resize shrink height 1 px or 1 ppt
-        bindsym semicolon resize grow width 1 px or 1 ppt
+        bindsym h resize shrink width 1 px or 1 ppt
+        bindsym t resize grow height 1 px or 1 ppt
+        bindsym n resize shrink height 1 px or 1 ppt
+        bindsym s resize grow width 1 px or 1 ppt
         bindsym Left resize shrink width 1 px or 1 ppt
         bindsym Down resize grow height 1 px or 1 ppt
         bindsym Up resize shrink height 1 px or 1 ppt
