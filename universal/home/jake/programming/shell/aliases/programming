@@ -5,3 +5,11 @@ alias compile='sudo g++ -o run.exe *.cpp --std=c++11'
 alias run='./run.exe'
 
 alias cddotfiles='cd /home/jake/programming/repos/dotfiles'
+
+alias cdpp='cd /home/jake/programming/repos/radiance/radiance-pixelpusher/src'
+alias cdppb='cdpp && cd ../build'
+alias cdppr='cdpp && cd producer/radiance'
+alias cdppt='cdpp && cd producer/tetris'
+alias cdppv='cdpp && cd consumer/visualizer'
+alias cdppp='cdpp && cd consumer/pixelpusher'
+alias cdppd='cdpp && cd dancefloor'

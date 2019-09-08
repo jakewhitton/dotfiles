@@ -17,3 +17,6 @@ alias vkeydates='vim "${REPO_DIR}/keydates.md"'
 
 # Repo management aliases
 alias cn='pwd="`pwd`"; cd "$REPO_DIR"; git add .; git commit -m "update `date "+${DATE_FORMAT}"`"; git push; cd "$pwd"' #Commit notes
+
+alias cd828='cd ${REPO_DIR}/notes/6.828'
+alias cd035='cd ${REPO_DIR}/notes/6.035'
