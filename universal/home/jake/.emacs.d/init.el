@@ -9,10 +9,10 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-	("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
+	("0598c6a29e13e7112cfbc2f523e31927ab7dce56ebb2016b567e1eff6dc1fd4f" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
  '(package-selected-packages
    (quote
-	(xelb exwm eyebrowse use-package spacemacs-theme solarized-theme))))
+	(zenburn-theme spacemacs-dark scala-mode xelb exwm eyebrowse use-package spacemacs-theme solarized-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
