@@ -1,5 +1,5 @@
 #Set modifier key to L-Alt
-set $mod Mod4
+set $mod Mod1
 
 #Set font
 font pango:Inconsolata Nerd Font 13
@@ -8,18 +8,18 @@ font pango:Inconsolata Nerd Font 13
 exec_always --no-startup-id feh --bg-scale /home/jake/wallpaper.*
 
 #User keybindings
-bindsym $mod+c exec gnome-terminal
+bindsym $mod+c exec alacritty
 bindsym $mod+i exec firefox
 bindsym $mod+e exec emacsclient -c
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id dmenu_run -fn 'Droid Sans Mono'
 bindsym XF86AudioMute exec pactl set-sink-mute 0 toggle
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume 0 -1%
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume 0 +1%
 bindsym XF86MonBrightnessDown exec /home/jake/programming/shell/brightness dec
 bindsym XF86MonBrightnessUp exec /home/jake/programming/shell/brightness inc
 
-#bindsym $mod+shift+h split h
-#bindsym $mod+shift+v split v
+bindsym $mod+control+h split h
+bindsym $mod+control+v split v
 
 #Set borders to 1pixel
 new_window 1pixel

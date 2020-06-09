@@ -1,2 +1,7 @@
 alias sshwalconia='ssh -Y jake@walconia.mit.edu'
 alias sshathena='ssh -Y jwhitton@athena.dialup.mit.edu'
+alias sshpi='ssh jake@10.238.5.116'
+alias sftppi='sftp jake@10.238.5.116'
+alias sftpathena='sftp jwhitton@athena.dialup.mit.edu'
+
+alias cdhack='cd ~/programming/repos/hackmit/src'

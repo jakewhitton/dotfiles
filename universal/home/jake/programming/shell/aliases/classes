@@ -1,7 +1,8 @@
 # Aliases useful for classes
 
-export CLASSES_DIR='/home/jake/programming/repos/classes/college/sophomore_spring'
+export CLASSES_DIR='/home/jake/programming/repos/classes/college/junior_spring'
 
-alias cd6006="cd ${CLASSES_DIR}/6.006"
-alias cd6031="cd ${CLASSES_DIR}/6.031"
-alias cd6033="cd ${CLASSES_DIR}/6.033"
+alias cd041='cd ${CLASSES_DIR}/6.041'
+alias cd115='cd ${CLASSES_DIR}/6.115'
+alias cd301='cd ${CLASSES_DIR}/21M.301'
+alias cd900='cd ${CLASSES_DIR}/24.900'

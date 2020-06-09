@@ -10,7 +10,4 @@ alias pr='sudo pacman -R'
 alias pu='sudo pacman -U'
 
 # Update
-alias psyu='sudo pacman -Syu'
-
-# Yaourt
-alias aur='yaourt'
+alias psyu='yay -Syu'

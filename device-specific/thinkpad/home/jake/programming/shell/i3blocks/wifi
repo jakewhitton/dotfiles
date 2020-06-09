@@ -2,7 +2,7 @@
 
 device="wlp3s0"
 
-connectionStatus=`nmcli --terse --fields DEVICE,STATE,CONNECTION device | grep "$device"`
+connectionStatus=`nmcli --terse --fields DEVICE,STATE,CONNECTION device | grep -e "^${device}:"`
 
 status=`echo "$connectionStatus" | cut -d ":" -f 2`
 network=`echo "$connectionStatus" | cut -d ":" -f 3`

@@ -10,6 +10,8 @@ noremap L N
 color molokai
 
 set number
+syntax on
+set autoindent
 
 set tabstop=4
 set softtabstop=0

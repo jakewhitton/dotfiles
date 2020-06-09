@@ -1,0 +1,6 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/etc/X11/xorg.conf.d'
+let g:netrw_dirhist_3='/home/jake/programming/repos/classes/college/junior_fall/6.035/compiler/tests/codegen/input'
+let g:netrw_dirhist_2='/home/jake/Downloads/qemu/docs/specs'
+let g:netrw_dirhist_1='/home/jake/Downloads/scala-1.11.8-1/src/scala-2.11.8'

@@ -3,20 +3,20 @@
 ### source <PATH_TO_THIS_FILE>                         ###
 ### to your bashrc or whatever                         ###
 
-export REPO_DIR="/home/jake/notes"
+export REPO_DIR="/home/jake/programming/repos/notes"
 export DATE_FORMAT="%Y-%m-%d"
 
 # Navigation aliases
-alias cdrepo='cd "${REPO_DIR}"; git pull'
-alias cdnotes='cd "${REPO_DIR}/notes"; git pull'
+alias cdrepo='cd "${REPO_DIR}"'
+alias cdnotes='cd "${REPO_DIR}/notes"'
 
 # File creation and editing aliases
 alias nn='vim "$(date "+${DATE_FORMAT}").md"'
-alias vtodo='vim "${REPO_DIR}/todo.md"'
-alias vkeydates='vim "${REPO_DIR}/keydates.md"'
 
 # Repo management aliases
 alias cn='pwd="`pwd`"; cd "$REPO_DIR"; git add .; git commit -m "update `date "+${DATE_FORMAT}"`"; git push; cd "$pwd"' #Commit notes
 
-alias cd828='cd ${REPO_DIR}/notes/6.828'
-alias cd035='cd ${REPO_DIR}/notes/6.035'
+alias cdn041='cd ${REPO_DIR}/notes/6.041'
+alias cdn115='cd ${REPO_DIR}/notes/6.115'
+alias cdn301='cd ${REPO_DIR}/notes/21M.301'
+alias cdn900='cd ${REPO_DIR}/notes/24.900'

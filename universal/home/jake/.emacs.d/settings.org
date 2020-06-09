@@ -12,6 +12,145 @@
   (package-install 'use-package))
 (require 'use-package)
 #+END_SRC
+* General configuration
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 3)
+(setq indent-line-finction 'insert-tab)
+(setq-default fill-column 67)
+(global-auto-revert-mode t)
+#+END_SRC
+* Org
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-cc" 'org-capture)
+
+(setq org-log-done t)
+
+
+(setq org-todo-keywords
+  '((sequence
+       "TODO(t)"
+       "NEXT(n)"
+       "WAITING(w)"
+       "|"
+       "DONE(d)"
+       "CANCELLED(c)")))
+
+(setq org-return-follows-link t)
+
+(setq org-refile-targets (quote (("projects.org" :maxlevel . 9)
+                                 ("someday.org" :maxlevel . 9)
+                				 ("tickler.org" :maxlevel . 9))))
+
+(add-to-list 'org-modules 'habits)
+#+END_SRC
+** Agenda
+#+BEGIN_SRC emacs-lisp
+(define-key global-map (kbd "C-c a") 'org-agenda)
+
+(setq org-agenda-files (list "/home/jake/org/refile.org"
+                             "/home/jake/org/personal.org"
+                             "/home/jake/org/school.org"))
+
+(setq org-agenda-compact-blocks t)
+
+(defun my-skip-unless-waiting ()
+  "Skip trees that are not waiting"
+  (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+    (if (re-search-forward ":waiting:" subtree-end t)
+        nil          ; tag found, do not skip
+      subtree-end))) ; tag not found, continue after end of subtree
+
+(defun jtw/org-stuck-projectp ()
+  "Predicate to show whether the point is on a stuck project"
+  (let* (
+         (subtree-end (save-excursion (org-end-of-subtree t)))
+	 	 (heading-has-todo (re-search-forward "TODO" subtree-end t))
+	 	 (heading-has-next (re-search-forward "NEXT" subtree-end t))
+	 	)
+	    (if
+          (and
+	 	    heading-has-todo
+	 	    (not heading-has-next))
+   	 	  nil
+	 	  subtree-end)))
+ 
+(setq org-agenda-custom-commands
+      '((" " "Agenda"
+	     ((agenda "" nil)
+		  (tags-todo "-CANCELLED/!"
+		             ((org-agenda-overriding-header "Stuck Projects")
+					  (org-agenda-skip-function (lambda () (not (my-skip-unless-waiting))))
+					  (org-agenda-sorting-strategy '(category-keep))))))))
+#+END_SRC
+** Journal
+#+BEGIN_SRC emacs-lisp
+(use-package org-journal
+  :ensure t
+  :after org
+  :custom
+  (org-journal-dir (concat (file-name-as-directory org-directory) "journal"))
+  (org-journal-file-format "%Y-%m-%d.org")
+  (org-journal-date-format "%Y-%m-%d")
+  (org-journal-find-file 'find-file)
+  (org-journal-enable-agenda-integration t))
+
+(add-hook 'org-journal-mode-hook (lambda () (auto-fill-mode 1)))
+#+END_SRC
+** Babel
+*** Lilypond
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (org . t)
+   (C . t)
+   (plantuml . t)
+   (latex . t)
+   (lilypond . t)))
+
+(setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
+(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+
+;; Instruct org to prepend each lilypond source block
+;; with some code that will remove the attribution at
+;; the bottom of the exported result
+;; 
+;; Doesn't currently work, because the internals of
+;; ob-lilypond screw with this at runtime
+(add-to-list 'org-babel-default-header-args:lilypond
+  '(:prologue . "\\header {\n tagline = \"\"\n}"))
+
+(defun my-org-confirm-babel-evaluate (lang body)
+  (not (member lang '("lilypond"))))
+
+(setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+#+END_SRC
+** Export
+#+BEGIN_SRC emacs-lisp
+(setq org-export-with-toc nil)
+
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+(setq org-src-fontify-natively t)
+
+(setq org-latex-minted-options
+      '(("bgcolor" "black")
+        ("linenos" "true")
+	    ("breaklines" "true")
+	    ("breakanywhere" "true")
+        ("frame" "lines")))
+#+END_SRC
+
 * EVIL
 #+BEGIN_SRC emacs-lisp
 (use-package evil
@@ -85,7 +224,7 @@
 ;;  (exwm-config)
 ;;  (exwm-enable))
 #+end_src
-* visual customization
+* Visual customization
 ** disable menubar, toolbar, and scrollbar
 #+begin_src emacs-lisp
 (menu-bar-mode -1)
@@ -102,13 +241,23 @@
 #+END_SRC
 ** Font
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(font . "Inconsolata-16"))
+(add-to-list 'default-frame-alist '(font . "Droid Sans Mono-12"))
 #+END_SRC
-
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
 (when (version<= "26.0.50" emacs-version)
   (global-display-line-numbers-mode))
+#+END_SRC
+* Window management
+#+BEGIN_SRC emacs-lisp
+; Moving focus between windows
+;(use-package windmove
+;  :ensure t
+;  :bind
+;  (("" . windmove-left)
+;   ("" . windmove-down)
+;   ("" . windmove-up)
+;   ("" . windmove-right)))
 #+END_SRC
 * Major mode configuration
 ** C Mode
@@ -118,33 +267,20 @@
               indent-tabs-mode t
 			  c-default-style "bsd")
 #+END_SRC
-** Org-Mode
+** LaTex Mode
 #+BEGIN_SRC emacs-lisp
-(require 'org)
-
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-cc" 'org-capture)
-(define-key global-map "\C-ca" 'org-agenda)
-
-(setq org-log-done t)
-
-(setq org-agenda-files (list "/home/jake/org/inbox.org"
-			     "/home/jake/org/projects.org"
-			     "/home/jake/org/tickler.org"
-			     "/home/jake/org/someday.org"))
-
-(setq org-todo-keywords
-  '((sequence
-       "TODO(t)"
-       "PROJECT(p)"
-       "WAITING(w)"
-       "|"
-       "DONE(d)"
-       "CANCELLED(c)")))
-
-(setq org-return-follows-link t)
-
-(setq org-refile-targets (quote (("projects.org" :maxlevel . 9)
-                                 ("someday.org" :maxlevel . 9)
-                				 ("tickler.org" :maxlevel . 9))))
+(add-hook 'latex-mode-hook 'auto-fill-mode)
+(add-hook 'latex-mode-hook (lambda () (electric-indent-mode -1)))
+#+END_SRC
+** EVIL Mode
+#+BEGIN_SRC emacs-lisp
+(setq evil-auto-indent nil)
+#+END_SRC
+** Markdown Mode
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
 #+END_SRC

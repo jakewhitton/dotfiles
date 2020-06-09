@@ -1,1 +1,5 @@
-source /home/jake/.config/exercism/exercism_completion.bash
+alias cdexercism='cd /home/jake/programming/repos/exercism'
+
+ert-run() {
+    emacs -batch -l ert -l $1 -f ert-run-tests-batch-and-exit
+}
