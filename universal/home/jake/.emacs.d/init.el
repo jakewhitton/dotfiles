@@ -20,7 +20,7 @@
  '(org-journal-find-file (quote find-file))
  '(package-selected-packages
    (quote
-	(php-mode org-journal markdown-mode zenburn-theme spacemacs-dark scala-mode xelb exwm eyebrowse use-package spacemacs-theme solarized-theme))))
+	(company paredit geiser php-mode org-journal markdown-mode zenburn-theme spacemacs-dark scala-mode xelb exwm eyebrowse use-package spacemacs-theme solarized-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
