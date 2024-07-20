@@ -1,0 +1,639 @@
+* Package management
+#+BEGIN_SRC emacs-lisp
+;; Set up ELPA and MELPA
+(require 'package)
+(setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")))
+(package-initialize)
+
+;; Set up package-use
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(require 'use-package)
+#+END_SRC
+* General configuration
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 3)
+(setq indent-line-finction 'insert-tab)
+(setq-default fill-column 67)
+(global-auto-revert-mode t)
+(setq backup-directory-alist `(("." . "~/.saves")))
+#+END_SRC
+* Org
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-cc" 'org-capture)
+
+(setq org-log-done t)
+
+
+(setq org-todo-keywords
+  '((sequence
+       "TODO(t)"
+       "NEXT(n)"
+       "WAITING(w)"
+       "|"
+       "DONE(d)"
+       "CANCELLED(c)")))
+
+(setq org-return-follows-link t)
+
+(setq org-refile-targets (quote (("projects.org" :maxlevel . 9)
+                                 ("someday.org" :maxlevel . 9)
+                				 ("tickler.org" :maxlevel . 9))))
+
+;(add-to-list 'org-modules 'habits)
+
+(add-hook 'org-mode-hook 'org-indent-mode)
+#+END_SRC
+** Fetching current clock item
+#+BEGIN_SRC emacs-lisp
+  (defun get-org-task ()
+	(if (org-clocking-p)
+		(progn
+		  (org-clock-goto))
+		"no task")
+	)
+#+END_SRC
+** Agenda
+#+BEGIN_SRC emacs-lisp
+(define-key global-map (kbd "C-c a") 'org-agenda)
+
+(setq org-agenda-files '("~/p/gtd"))
+(setq org-agenda-dim-blocked-tasks nil)
+(setq org-agenda-compact-blocks t)
+
+(setq org-agenda-custom-commands
+  '((" " "Agenda"
+	((agenda "" nil)
+	(tags "REFILE"
+			((org-agenda-overriding-header "Tasks to Refile")
+			(org-tags-match-list-sublevels nil)))
+	(tags-todo "-CANCELLED/!"
+				((org-agenda-overriding-header "Stuck Projects")
+				(org-agenda-skip-function 'bh/skip-non-stuck-projects)
+				(org-agenda-sorting-strategy
+					'(category-keep))))
+	(tags-todo "-HOLD-CANCELLED/!"
+				((org-agenda-overriding-header "Projects")
+				(org-agenda-skip-function 'bh/skip-non-projects)
+				(org-tags-match-list-sublevels 'indented)
+				(org-agenda-sorting-strategy
+					'(category-keep))))
+	(tags-todo "-CANCELLED/!NEXT"
+				((org-agenda-overriding-header (concat "Project Next Tasks"
+														(if bh/hide-scheduled-and-waiting-next-tasks
+															""
+														" (including WAITING and SCHEDULED tasks)")))
+				(org-agenda-skip-function 'bh/skip-projects-and-habits-and-single-tasks)
+				(org-tags-match-list-sublevels t)
+				(org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-sorting-strategy
+					'(todo-state-down effort-up category-keep))))
+	(tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+				((org-agenda-overriding-header (concat "Project Subtasks"
+														(if bh/hide-scheduled-and-waiting-next-tasks
+															""
+														" (including WAITING and SCHEDULED tasks)")))
+				(org-agenda-skip-function 'bh/skip-non-project-tasks)
+				(org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-sorting-strategy
+					'(category-keep))))
+	(tags-todo "-REFILE-CANCELLED-WAITING-HOLD/!"
+				((org-agenda-overriding-header (concat "Standalone Tasks"
+														(if bh/hide-scheduled-and-waiting-next-tasks
+															""
+														" (including WAITING and SCHEDULED tasks)")))
+				(org-agenda-skip-function 'bh/skip-project-tasks)
+				(org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-with-date bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-sorting-strategy
+					'(category-keep))))
+	(tags-todo "-CANCELLED+WAITING|HOLD/!"
+				((org-agenda-overriding-header (concat "Waiting and Postponed Tasks"
+														(if bh/hide-scheduled-and-waiting-next-tasks
+															""
+														" (including WAITING and SCHEDULED tasks)")))
+				(org-agenda-skip-function 'bh/skip-non-tasks)
+				(org-tags-match-list-sublevels nil)
+				(org-agenda-todo-ignore-scheduled bh/hide-scheduled-and-waiting-next-tasks)
+				(org-agenda-todo-ignore-deadlines bh/hide-scheduled-and-waiting-next-tasks)))
+	(tags "-REFILE/"
+			((org-agenda-overriding-header "Tasks to Archive")
+			(org-agenda-skip-function 'bh/skip-non-archivable-tasks)
+			(org-tags-match-list-sublevels nil)))
+  )
+  nil)))
+#+END_SRC
+** Journal
+#+BEGIN_SRC emacs-lisp
+(use-package org-journal
+  :ensure t
+  :after org
+  :custom
+  (org-journal-dir "~/p/journal")
+  (org-journal-file-format "%Y-%m-%d.org")
+  (org-journal-date-format "%Y-%m-%d")
+  (org-journal-find-file 'find-file)
+  (org-journal-enable-agenda-integration t))
+
+(add-hook 'org-journal-mode-hook (lambda () (auto-fill-mode 1)))
+#+END_SRC
+** Babel
+#+BEGIN_SRC emacs-lisp
+(setq org-confirm-babel-evaluate nil)
+#+END_SRC
+*** Scheme
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+*** Lilypond
+#+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (org . t)
+   (C . t)
+   (plantuml . t)
+   (latex . t)
+   (lilypond . t)
+   (scheme . t)))
+
+(setq org-plantuml-jar-path (expand-file-name "/usr/share/java/plantuml/plantuml.jar"))
+(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+
+;; Instruct org to prepend each lilypond source block
+;; with some code that will remove the attribution at
+;; the bottom of the exported result
+;; 
+;; Doesn't currently work, because the internals of
+;; ob-lilypond screw with this at runtime
+(add-to-list 'org-babel-default-header-args:lilypond
+  '(:prologue . "\\header {\n tagline = \"\"\n}"))
+#+END_SRC
+** Export
+#+BEGIN_SRC emacs-lisp
+(require 'ox-latex)
+(add-to-list 'org-latex-packages-alist '("" "minted"))
+(setq org-latex-listings 'minted)
+
+(setq org-latex-pdf-process
+      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
+(setq org-src-fontify-natively t)
+
+(setq org-latex-minted-options
+      '(("bgcolor" "black")
+        ("linenos" "true")
+	    ("breaklines" "true")
+	    ("breakanywhere" "true")
+        ("frame" "lines")))
+#+END_SRC
+
+** Helper functions
+#+BEGIN_SRC emacs-lisp
+(defun bh/is-project-p ()
+  "Any task with a todo keyword subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task has-subtask))))
+
+(defun bh/is-project-subtree-p ()
+  "Any task with a todo keyword that is in a project subtree.
+Callers of this function already widen the buffer view."
+  (let ((task (save-excursion (org-back-to-heading 'invisible-ok)
+                              (point))))
+    (save-excursion
+      (bh/find-project-task)
+      (if (equal (point) task)
+          nil
+        t))))
+
+(defun bh/is-task-p ()
+  "Any task with a todo keyword and no subtask"
+  (save-restriction
+    (widen)
+    (let ((has-subtask)
+          (subtree-end (save-excursion (org-end-of-subtree t)))
+          (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+      (save-excursion
+        (forward-line 1)
+        (while (and (not has-subtask)
+                    (< (point) subtree-end)
+                    (re-search-forward "^\*+ " subtree-end t))
+          (when (member (org-get-todo-state) org-todo-keywords-1)
+            (setq has-subtask t))))
+      (and is-a-task (not has-subtask)))))
+
+(defun bh/is-subproject-p ()
+  "Any task which is a subtask of another project"
+  (let ((is-subproject)
+        (is-a-task (member (nth 2 (org-heading-components)) org-todo-keywords-1)))
+    (save-excursion
+      (while (and (not is-subproject) (org-up-heading-safe))
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq is-subproject t))))
+    (and is-a-task is-subproject)))
+
+(defun bh/list-sublevels-for-projects-indented ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels 'indented)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defun bh/list-sublevels-for-projects ()
+  "Set org-tags-match-list-sublevels so when restricted to a subtree we list all subtasks.
+  This is normally used by skipping functions where this variable is already local to the agenda."
+  (if (marker-buffer org-agenda-restrict-begin)
+      (setq org-tags-match-list-sublevels t)
+    (setq org-tags-match-list-sublevels nil))
+  nil)
+
+(defvar bh/hide-scheduled-and-waiting-next-tasks t)
+
+(defun bh/toggle-next-task-display ()
+  (interactive)
+  (setq bh/hide-scheduled-and-waiting-next-tasks (not bh/hide-scheduled-and-waiting-next-tasks))
+  (when  (equal major-mode 'org-agenda-mode)
+    (org-agenda-redo))
+  (message "%s WAITING and SCHEDULED NEXT Tasks" (if bh/hide-scheduled-and-waiting-next-tasks "Hide" "Show")))
+
+(defun bh/skip-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (bh/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                nil
+              next-headline)) ; a stuck project, has subtasks but no next task
+        nil))))
+
+(defun bh/skip-non-stuck-projects ()
+  "Skip trees that are not stuck projects"
+  ;; (bh/list-sublevels-for-projects-indented)
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (if (bh/is-project-p)
+          (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+                 (has-next ))
+            (save-excursion
+              (forward-line 1)
+              (while (and (not has-next) (< (point) subtree-end) (re-search-forward "^\\*+ NEXT " subtree-end t))
+                (unless (member "WAITING" (org-get-tags-at))
+                  (setq has-next t))))
+            (if has-next
+                next-headline
+              nil)) ; a stuck project, has subtasks but no next task
+        next-headline))))
+
+(defun bh/skip-non-projects ()
+  "Skip trees that are not projects"
+  ;; (bh/list-sublevels-for-projects-indented)
+  (if (save-excursion (bh/skip-non-stuck-projects))
+      (save-restriction
+        (widen)
+        (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+          (cond
+           ((bh/is-project-p)
+            nil)
+           ((and (bh/is-project-subtree-p) (not (bh/is-task-p)))
+            nil)
+           (t
+            subtree-end))))
+    (save-excursion (org-end-of-subtree t))))
+
+(defun bh/skip-non-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-task-p)
+        nil)
+       (t
+        next-headline)))))
+
+(defun bh/skip-project-trees-and-habits ()
+  "Skip trees that are projects"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits-and-single-tasks ()
+  "Skip trees that are projects, tasks that are habits, single non-project tasks"
+  (save-restriction
+    (widen)
+    (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((org-is-habit-p)
+        next-headline)
+       ((and bh/hide-scheduled-and-waiting-next-tasks
+             (member "WAITING" (org-get-tags-at)))
+        next-headline)
+       ((bh/is-project-p)
+        next-headline)
+       ((and (bh/is-task-p) (not (bh/is-project-subtree-p)))
+        next-headline)
+       (t
+        nil)))))
+
+(defun bh/skip-project-tasks-maybe ()
+  "Show tasks related to the current restriction.
+When restricted to a project, skip project and sub project tasks, habits, NEXT tasks, and loose tasks.
+When not restricted, skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max))))
+           (limit-to-project (marker-buffer org-agenda-restrict-begin)))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (not limit-to-project)
+             (bh/is-project-subtree-p))
+        subtree-end)
+       ((and limit-to-project
+             (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-project-tasks ()
+  "Show non-project tasks.
+Skip project and sub-project tasks, habits, and project related tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       ((bh/is-project-subtree-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-project-tasks ()
+  "Show project tasks.
+Skip project and sub-project tasks, habits, and loose non-project tasks."
+  (save-restriction
+    (widen)
+    (let* ((subtree-end (save-excursion (org-end-of-subtree t)))
+           (next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+      (cond
+       ((bh/is-project-p)
+        next-headline)
+       ((org-is-habit-p)
+        subtree-end)
+       ((and (bh/is-project-subtree-p)
+             (member (org-get-todo-state) (list "NEXT")))
+        subtree-end)
+       ((not (bh/is-project-subtree-p))
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-projects-and-habits ()
+  "Skip trees that are projects and tasks that are habits"
+  (save-restriction
+    (widen)
+    (let ((subtree-end (save-excursion (org-end-of-subtree t))))
+      (cond
+       ((bh/is-project-p)
+        subtree-end)
+       ((org-is-habit-p)
+        subtree-end)
+       (t
+        nil)))))
+
+(defun bh/skip-non-subprojects ()
+  "Skip trees that are not projects"
+  (let ((next-headline (save-excursion (outline-next-heading))))
+    (if (bh/is-subproject-p)
+        nil
+      next-headline)))
+
+(defun bh/find-project-task ()
+  "Move point to the parent (project) task if any"
+  (save-restriction
+    (widen)
+    (let ((parent-task (save-excursion (org-back-to-heading 'invisible-ok) (point))))
+      (while (org-up-heading-safe)
+        (when (member (nth 2 (org-heading-components)) org-todo-keywords-1)
+          (setq parent-task (point))))
+      (goto-char parent-task)
+      parent-task)))
+#+END_SRC
+
+* EVIL
+#+BEGIN_SRC emacs-lisp
+(use-package evil
+  :ensure t
+  :defer .1
+  :init
+  (setq evil-search-module 'evil-search)
+  :config
+  ;; Remap hjkl -> htns
+  (define-key evil-motion-state-map "t" 'evil-next-visual-line)
+  (define-key evil-motion-state-map "n" 'evil-previous-visual-line)
+  (define-key evil-motion-state-map "s" 'evil-forward-char)
+  (unbind-key "s" evil-normal-state-map)
+
+  ;; Move t -> j, n -> l, N -> L, s -> k
+  (define-key evil-motion-state-map "j" 'evil-find-char-to)
+  (define-key evil-motion-state-map "l" 'evil-ex-search-next)
+  (define-key evil-motion-state-map "L" 'evil-ex-search-previous)
+  (define-key evil-motion-state-map "k" 'evil-substitute)
+
+  ;; Get C-c to escape to normal mode
+  (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
+  (evil-mode))
+#+END_SRC
+* EXWM
+#+BEGIN_SRC emacs-lisp
+(defun exwm-config ()
+  (setq exwm-workspace-number 10)
+  
+  ;; Global keybindings
+  (unless (get 'exwm-input-global-keys 'saved-value)
+    (setq exwm-input-global-keys
+          `(
+            ;; 's-r': Reset (to line-mode).
+            ([?\s-r] . exwm-reset)
+            ;; 's-&': Launch application.
+            ([?\s-d] . (lambda (command)
+                         (interactive (list (read-shell-command "$ ")))
+                         (start-process-shell-command command nil command)))
+            ;; 's-N': Switch to certain workspace.
+            ,@(mapcar (lambda (i)
+                        `(,(kbd (format "s-%d" (mod (+ i 1) 10))) .
+                          (lambda ()
+                            (interactive)
+                            (exwm-workspace-switch-create ,i))))
+                      (number-sequence 0 9))
+  
+            ;; 's-S-N': Switch to certain workspace.
+            ,@(mapcar (lambda (x)
+                        `(,(kbd (format "s-%s" (cdr x))) .
+                          (lambda ()
+                            (interactive)
+                            (exwm-workspace-move-window (- ,(car x) 1)))))
+					  '((1  . "!")
+					    (2  . "@")
+						(3  . "#")
+						(4  . "$")
+						(5  . "%")
+						(6  . "^")
+						(7  . "&")
+						(8  . "*")
+						(9  . "(")
+						(10 . ")"))))))
+  
+  (require 'exwm-systemtray)
+  (exwm-systemtray-enable))
+
+;;(use-package exwm
+;;  :ensure t
+;;  :config
+;;  (exwm-config)
+;;  (exwm-enable))
+#+end_src
+* Visual customization
+** disable menubar, toolbar, and scrollbar
+#+begin_src emacs-lisp
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+#+end_src
+** Theme
+#+BEGIN_SRC emacs-lisp
+(use-package solarized-theme
+  :defer t
+  :ensure t
+  :init
+  (load-theme 'solarized-dark t))
+#+END_SRC
+** Font
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'default-frame-alist '(font . "Inconsolata-16"))
+#+END_SRC
+** Line numbers
+#+BEGIN_SRC emacs-lisp
+(when (version<= "26.0.50" emacs-version)
+  (global-display-line-numbers-mode))
+#+END_SRC
+* Window management
+#+BEGIN_SRC emacs-lisp
+; Moving focus between windows
+;(use-package windmove
+;  :ensure t
+;  :bind
+;  (("" . windmove-left)
+;   ("" . windmove-down)
+;   ("" . windmove-up)
+;   ("" . windmove-right)))
+#+END_SRC
+* Major mode configuration
+** C Mode
+#+BEGIN_SRC emacs-lisp
+(setq-default c-basic-offset 4
+              tab-width 4
+              indent-tabs-mode t
+			  c-default-style "bsd")
+#+END_SRC
+** LaTex Mode
+#+BEGIN_SRC emacs-lisp
+(add-hook 'latex-mode-hook 'auto-fill-mode)
+(add-hook 'latex-mode-hook (lambda () (electric-indent-mode -1)))
+#+END_SRC
+** EVIL Mode
+#+BEGIN_SRC emacs-lisp
+(setq evil-auto-indent nil)
+#+END_SRC
+** Markdown Mode
+#+BEGIN_SRC emacs-lisp
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode))
+  :init (setq markdown-command "pandoc"))
+#+END_SRC
+** Lilypond mode
+#+BEGIN_SRC emacs-lisp
+(setq load-path (append (list (expand-file-name "/usr/share/emacs/site-lisp")) load-path))
+(autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
+(add-to-list 'auto-mode-alist '("\\.ly$" . LilyPond-mode))
+(add-to-list 'auto-mode-alist '("\\.ily$" . LilyPond-mode))
+(add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
+#+END_SRC
+** Paredit
+#+BEGIN_SRC emacs-lisp
+(use-package paredit
+   :ensure t
+   :commands (enable-paredit-mode)
+   :init
+   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode))
+#+END_SRC
+** Company
+#+BEGIN_SRC emacs-lisp
+(use-package company
+   :ensure t
+   :bind (:map company-active-map
+          ("C-n" . company-select-next)
+          ("C-p" . company-select-previous))
+   :config
+   (setq company-idle-delay 0.3)
+   (global-company-mode t))
+#+END_SRC
+** Geiser
+#+BEGIN_SRC emacs-lisp
+(use-package geiser
+   :ensure t
+   :defer t
+   :init (add-hook 'scheme-mode-hook 'geiser-mode)
+   :commands geiser-mode
+   :config (setq geiser-active-implementations '(mit)))
+#+END_SRC
