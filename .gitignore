@@ -2,3 +2,8 @@
 emacs
 emacs/.emacs.d/init.el
 emacs/.emacs.d/settings.org
+
+# For vim, only track .vimrc & colorschemes
+vim
+vim/.vimrc
+vim/.vim/colors/
