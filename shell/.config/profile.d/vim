@@ -1,0 +1,9 @@
+# Aliases related to the launching and usage of the vim editor
+
+alias v='vim'
+alias vbashrc='vim /home/jake/.bashrc'
+alias vxinitrc='vim /home/jake/.xinitrc'
+alias vi3config='vim /home/jake/.config/sway/config'
+alias vvimrc='vim /home/jake/.vimrc'
+alias vblocks='vim /home/jake/.config/i3blocks/config'
+alias vhosts='sudo vim /etc/hosts'

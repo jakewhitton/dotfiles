@@ -1,0 +1,5 @@
+# Aliases related to various actions in the bash shell/Unix CLI tools
+alias l='ls --color=auto -Alh'
+alias me='chmod +x' # Make executable
+alias sd='sudo shutdown now'
+alias rb='sudo reboot'
