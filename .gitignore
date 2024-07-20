@@ -1,0 +1,4 @@
+# For emacs, only track init.el & settings.org
+emacs
+emacs/.emacs.d/init.el
+emacs/.emacs.d/settings.org
