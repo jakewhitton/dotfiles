@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Fetch CPU temperature readings per for each core
+readarray -t temperatures < <(sensors | grep -e "^Core [0-9]\+" | sed 's/[^°]*+\(\([0-9]\|\.\)\+\)°C.*/\1/')
+total_measurements="${#temperatures[@]}"
+
+# Build expression to compute the average temperature
+expression="("
+for i in "${!temperatures[@]}"
+do
+    # Insert measurement
+    temperature="${temperatures[$i]}"
+    expression+="$temperature"
+
+    # Insert plus if not the last measurement
+    if [ $i -lt $(( $total_measurements - 1 )) ]
+    then
+        expression+="+"
+    fi
+done
+expression+=")/${total_measurements}"
+
+avg_temp=`echo "scale=1; ${expression}" | bc`
+echo "<span foreground='#6666ff'>${avg_temp}°C</span>"

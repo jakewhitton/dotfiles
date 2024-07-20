@@ -1,0 +1,3 @@
+#!/bin/bash
+
+date "+ %a %Y-%m-%d"

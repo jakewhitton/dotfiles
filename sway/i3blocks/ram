@@ -1,0 +1,23 @@
+#!/bin/sh
+
+free=`free --mega | grep "Mem:" | tr -s " "`
+
+used=`echo "$free" | cut -d " " -f 3`
+total=`echo "$free" | cut -d " " -f 2`
+percentage=`echo "scale=1; ${used} * 100 / ${total}" | bc`
+
+# If $percentage starts with a decimal point, add a leading zero
+if [ ! -z "`echo $percentage | grep ^[.]`" ]; then
+	percentage="0${percentage}"
+fi
+
+convert () {
+	if [ $1 -lt 1000 ]; then
+		echo "${1}MB"
+	else
+		converted=`echo "scale=1; ${1} / 1000" | bc`
+		echo "${converted}GB"
+	fi
+}
+
+printf "<span foreground='#ff0000'>%s/%s[%s%%]</span>\n" `convert $used` `convert $total` $percentage
