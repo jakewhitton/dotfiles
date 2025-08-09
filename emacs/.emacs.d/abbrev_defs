@@ -1,0 +1,9 @@
+;;-*-coding: utf-8;-*-
+(define-abbrev-table 'org-mode-abbrev-table
+  '(
+    ("CANCELLED" "☒" nil :count 1)
+    ("DONE" "☑" nil :count 1)
+    ("PROJECT" "⚑" nil :count 0)
+    ("TODO" "☐" nil :count 2)
+   ))
+

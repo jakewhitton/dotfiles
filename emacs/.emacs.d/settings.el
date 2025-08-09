@@ -1,5 +1,3 @@
-* Package management
-#+BEGIN_SRC emacs-lisp
 ;; Set up ELPA and MELPA
 (require 'package)
 (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
@@ -11,18 +9,14 @@
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
-#+END_SRC
-* General configuration
-#+BEGIN_SRC emacs-lisp
+
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 3)
 (setq indent-line-finction 'insert-tab)
 (setq-default fill-column 67)
 (global-auto-revert-mode t)
 (setq backup-directory-alist `(("." . "~/.saves")))
-#+END_SRC
-* Org
-#+BEGIN_SRC emacs-lisp
+
 (require 'org)
 
 (define-key global-map "\C-cl" 'org-store-link)
@@ -87,17 +81,13 @@
            (match-beginning 0)
            (match-end 0)
            '(invisible t))))))
-#+END_SRC
-** Agenda
-#+BEGIN_SRC emacs-lisp
+
 (define-key global-map (kbd "C-c a") 'org-agenda)
 
 (setq org-agenda-files '("~/p/gtd"))
 (setq org-agenda-dim-blocked-tasks nil)
 (setq org-agenda-compact-blocks t)
-#+END_SRC
-** Journal
-#+BEGIN_SRC emacs-lisp
+
 (use-package org-journal
   :ensure t
   :after org
@@ -109,17 +99,11 @@
   (org-journal-enable-agenda-integration t))
 
 (add-hook 'org-journal-mode-hook (lambda () (auto-fill-mode 1)))
-#+END_SRC
-** Babel
-#+BEGIN_SRC emacs-lisp
-(setq org-confirm-babel-evaluate nil)
-#+END_SRC
-*** Scheme
-#+BEGIN_SRC emacs-lisp
 
-#+END_SRC
-*** Lilypond
-#+BEGIN_SRC emacs-lisp
+(setq org-confirm-babel-evaluate nil)
+
+
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
@@ -141,9 +125,7 @@
 ;; ob-lilypond screw with this at runtime
 (add-to-list 'org-babel-default-header-args:lilypond
   '(:prologue . "\\header {\n tagline = \"\"\n}"))
-#+END_SRC
-** Export
-#+BEGIN_SRC emacs-lisp
+
 (require 'ox-latex)
 (add-to-list 'org-latex-packages-alist '("" "minted"))
 (setq org-latex-listings 'minted)
@@ -160,10 +142,7 @@
 	    ("breaklines" "true")
 	    ("breakanywhere" "true")
         ("frame" "lines")))
-#+END_SRC
 
-* EVIL
-#+BEGIN_SRC emacs-lisp
 (setq evil-want-C-i-jump nil)
 (use-package evil
   :ensure t
@@ -186,9 +165,7 @@
   ;; Get C-c to escape to normal mode
   (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
   (evil-mode))
-#+END_SRC
-* EXWM
-#+BEGIN_SRC emacs-lisp
+
 (defun exwm-config ()
   (setq exwm-workspace-number 10)
   
@@ -235,33 +212,22 @@
 ;;  :config
 ;;  (exwm-config)
 ;;  (exwm-enable))
-#+end_src
-* Visual customization
-** disable menubar, toolbar, and scrollbar
-#+begin_src emacs-lisp
+
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
-#+end_src
-** Theme
-#+BEGIN_SRC emacs-lisp
+
 (use-package solarized-theme
   :defer t
   :ensure t
   :init
   (load-theme 'solarized-dark t))
-#+END_SRC
-** Font
-#+BEGIN_SRC emacs-lisp
+
 (add-to-list 'default-frame-alist '(font . "Droid Sans Mono-14"))
-#+END_SRC
-** Line numbers
-#+BEGIN_SRC emacs-lisp
+
 (when (version<= "26.0.50" emacs-version)
   (global-display-line-numbers-mode))
-#+END_SRC
-* Window management
-#+BEGIN_SRC emacs-lisp
+
 ; Moving focus between windows
 ;(use-package windmove
 ;  :ensure t
@@ -270,50 +236,35 @@
 ;   ("" . windmove-down)
 ;   ("" . windmove-up)
 ;   ("" . windmove-right)))
-#+END_SRC
-* Major mode configuration
-** C Mode
-#+BEGIN_SRC emacs-lisp
+
 (setq-default c-basic-offset 4
               tab-width 4
               indent-tabs-mode t
 			  c-default-style "bsd")
-#+END_SRC
-** LaTex Mode
-#+BEGIN_SRC emacs-lisp
+
 (add-hook 'latex-mode-hook 'auto-fill-mode)
 (add-hook 'latex-mode-hook (lambda () (electric-indent-mode -1)))
-#+END_SRC
-** EVIL Mode
-#+BEGIN_SRC emacs-lisp
+
 (setq evil-auto-indent nil)
-#+END_SRC
-** Markdown Mode
-#+BEGIN_SRC emacs-lisp
+
 (use-package markdown-mode
   :ensure t
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode))
   :init (setq markdown-command "pandoc"))
-#+END_SRC
-** Lilypond mode
-#+BEGIN_SRC emacs-lisp
+
 (setq load-path (append (list (expand-file-name "/usr/share/emacs/site-lisp")) load-path))
 (autoload 'LilyPond-mode "lilypond-mode" "LilyPond Editing Mode" t)
 (add-to-list 'auto-mode-alist '("\\.ly$" . LilyPond-mode))
 (add-to-list 'auto-mode-alist '("\\.ily$" . LilyPond-mode))
 (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock)))
-#+END_SRC
-** Paredit
-#+BEGIN_SRC emacs-lisp
+
 (use-package paredit
    :ensure t
    :commands (enable-paredit-mode)
    :init
    (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode))
-#+END_SRC
-** Company
-#+BEGIN_SRC emacs-lisp
+
 (use-package company
    :ensure t
    :bind (:map company-active-map
@@ -322,17 +273,12 @@
    :config
    (setq company-idle-delay 0.3)
    (global-company-mode t))
-#+END_SRC
-** Geiser
-#+BEGIN_SRC emacs-lisp
+
 (use-package geiser
    :ensure t
    :defer t
    :init (add-hook 'scheme-mode-hook 'geiser-mode)
    :commands geiser-mode
    :config (setq geiser-active-implementations '(mit)))
-#+END_SRC
-** VHDL
-#+BEGIN_SRC emacs-lisp
+
 (setq vhdl-basic-offset 4)
-#+END_SRC
