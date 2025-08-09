@@ -1,0 +1,1 @@
+alias fixmonitors='xrandr --output DP-2 --mode 5120x1440 --above DP-0 --rotate inverted && xrandr --output DP-0 --mode 5120x1440 --rate 120 && xrandr --output HDMI-0 --off'

@@ -1,0 +1,9 @@
+function chat() {
+    curl http://localhost:11434/api/chat -d '{
+  "model": "llama3",
+  "stream": false,
+  "messages": [
+    { "role": "user", "content": "${1}" }
+  ]
+}'
+}

@@ -1,0 +1,2 @@
+PATH="${PATH}:/home/jake/.local/bin"
+export PATH

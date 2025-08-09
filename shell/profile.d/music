@@ -1,0 +1,76 @@
+#!/usr/bin/w
+function transpose()
+{
+    local file_in="$1"
+    local file_out="$2"
+    local transpose_semitones="$3"
+
+    # Calculate cents offset
+    echo $transpose_semitones
+    local transpose_cents=$(( 100 * $transpose_semitones ))
+
+    # Perform transpose
+    sox "$file_in" "$file_out" pitch "$transpose_cents"
+}
+
+function jelly_usage()
+{
+    echo 'Usage: jelly
+    [commit] <file>' 2>&1
+}
+
+export MEDIA_DIR="/opt/jellyfin/media"
+export MEDIA_DIR_CREATION="${MEDIA_DIR}/produce"
+export MEDIA_DIR_MUSIC="${MEDIA_DIR}/consume/music"
+export MEDIA_DIR_TV="${MEDIA_DIR}/consume/tv"
+export MEDIA_DIR_MOVIES="${MEDIA_DIR}/consume/movies"
+
+function jelly()
+{
+    if [ "$1" == "commit" ]
+    then
+        local file="$2"
+        if [ -z "$file" ]
+        then
+            jelly_usage
+            return -1
+        fi
+
+        local file_basename="$(basename "$file")"
+        sudo rsync -a --chown=jellyfin:jellyfin "$file" "${MEDIA_DIR_CREATION}/${file_basename}"
+    fi
+}
+
+function _jelly_complete()
+{
+    local dir
+    case $COMP_CWORD in
+        0) dir="$MEDIA_DIR";;
+        *) dir="/tmp";;
+    esac
+    # Complete paths in the selected directory
+    local -a files
+    files=($(find "$dir" -type f -name '*'))
+    compadd -a "${files[@]}"
+}
+
+complete -F _jelly_complete jelly
+
+function yt()
+{
+	local url="$1"
+    if [ -z "$url" ]
+    then
+		echo 'Usage: yt <url> <file>' 2>&1
+		return -1
+	fi
+
+	local file="$2"
+	if [ -z "$file" ]
+	then
+		yt-dlp --extract-audio --audio-format wav "$url"
+	else
+		yt-dlp --extract-audio --audio-format wav "$url" -o "$file"
+	fi
+
+}

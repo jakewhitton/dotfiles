@@ -1,0 +1,8 @@
+# Aliases related to various actions in the bash shell/Unix CLI tools
+alias l='ls --color=auto -Alh'
+alias me='chmod +x'
+alias sd='sudo shutdown now'
+alias rb='sudo reboot'
+
+PATH="${PATH}:/home/jake/programming/shell"
+export PATH

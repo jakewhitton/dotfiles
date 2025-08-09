@@ -1,0 +1,13 @@
+# Pacman aliases
+
+# Install package
+alias pi='sudo pacman -S'
+
+# Remove package
+alias pr='sudo pacman -R'
+
+# Install makepkg-built package
+alias pu='sudo pacman -U'
+
+# Update
+alias psyu='yay -Syu'
