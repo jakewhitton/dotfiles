@@ -18,3 +18,6 @@ set softtabstop=0
 set expandtab
 set shiftwidth=4
 set smarttab
+
+" Syntax highlighting hint for bash alias files
+autocmd BufRead,BufNewFile ~/.config/profile.d/* set syntax=sh
