@@ -15,8 +15,8 @@
 * General configuration
 #+BEGIN_SRC emacs-lisp
 (setq-default indent-tabs-mode nil)
-(setq-default tab-width 3)
-(setq indent-line-finction 'insert-tab)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
 (setq-default fill-column 67)
 (global-auto-revert-mode t)
 (setq backup-directory-alist `(("." . "~/.saves")))
@@ -581,7 +581,7 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
 #+BEGIN_SRC emacs-lisp
 (setq-default c-basic-offset 4
               tab-width 4
-              indent-tabs-mode t
+              indent-tabs-mode nil
 			  c-default-style "bsd")
 #+END_SRC
 ** LaTex Mode
@@ -636,4 +636,11 @@ Skip project and sub-project tasks, habits, and loose non-project tasks."
    :init (add-hook 'scheme-mode-hook 'geiser-mode)
    :commands geiser-mode
    :config (setq geiser-active-implementations '(mit)))
+#+END_SRC
+** VHDL
+#+BEGIN_SRC emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq-default vhdl-basic-offset 4)
+(setq-default indent-line-function 'insert-tab)
 #+END_SRC
