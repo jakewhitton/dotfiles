@@ -1,0 +1,36 @@
+# Include vivado in system path by sourcing env script
+#. /opt/xilinx/Vivado/2024.1/settings64.sh
+
+alias cco='cd ~/programming/repos/cuoc_cho_am'
+alias ccos='cd ~/p/projects/cco/scripts'
+
+export KERNEL_DIR=~/programming/repos/cuoc_cho_am/build/sw/vm/build/linux-6.6.18
+alias cdk='cd "$KERNEL_DIR"'
+
+klist()
+{
+    find "$KERNEL_DIR" -name "*.h" -or -name "*.c"
+}
+
+kgrep()
+{
+    klist | xargs grep --color=auto "$@"
+}
+
+kdef()
+{
+    if [ $# -ne 1 ]
+    then
+        >&2 echo "usage: kdef <name>"
+        return 1
+    fi
+    local name="$1"
+
+    local definitions=(
+        # C Macros
+        '^#define\s+'"$name"'(\s|\()(?:.*\\\r?\n)*.*$'
+        # Struct definitions
+        #'^struct(\s|\n)+'"$name"'\s*(?=\{((?:[^{}]++|\{(?2)\})++)\})'
+    )
+    klist | xargs pcregrep --color=auto -M "$(IFS=\|; echo "${definitions[*]}")"
+}
