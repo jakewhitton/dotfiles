@@ -193,11 +193,12 @@
 (setq org-src-fontify-natively t)
 
 (setq org-latex-minted-options
-      '(("bgcolor" "black")
+      '(("bgcolor" "codebg")
         ("linenos" "true")
 	    ("breaklines" "true")
 	    ("breakanywhere" "true")
-        ("frame" "lines")))
+	    ("framesep" "0em")
+        ("frame" "none")))
 #+END_SRC
 
 ** Helper functions
