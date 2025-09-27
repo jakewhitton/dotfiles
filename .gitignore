@@ -1,2 +1,9 @@
-universal/home/jake/.emacs.d/elpa
-universal/home/jake/.emacs.d/settings.el
+# For emacs, only track init.el & settings.org
+emacs
+emacs/.emacs.d/init.el
+emacs/.emacs.d/settings.org
+
+# For vim, only track .vimrc & colorschemes
+vim
+vim/.vimrc
+vim/.vim/colors/
