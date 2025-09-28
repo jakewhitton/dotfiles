@@ -1,0 +1,47 @@
+# /etc/i3blocks.conf
+
+
+# List of valid properties:
+# align
+# color
+# command
+# full_text
+# instance
+# interval
+# label
+# min_width
+# name
+# separator
+# separator_block_width
+# short_text
+# signal
+# urgent
+
+# Global properties
+command=/home/jake/.d/sway/i3blocks/${BLOCK_NAME}
+separator_block_width=20
+markup=none
+
+[battery]
+interval=5
+markup=pango
+
+[ram]
+interval=5
+markup=pango
+
+[cpu]
+interval=5
+markup=pango
+
+[brightness]
+interval=10
+
+[volume]
+interval=5
+
+[date]
+interval=5
+
+[time]
+interval=1
