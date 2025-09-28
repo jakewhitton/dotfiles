@@ -96,6 +96,41 @@
 (setq org-agenda-dim-blocked-tasks nil)
 (setq org-agenda-compact-blocks t)
 #+END_SRC
+** Clock management
+#+BEGIN_SRC emacs-lisp
+; TODO: investigate implementation that uses org-tree-to-indirect-buffer
+
+(setq focus-buffer "*Task*")
+
+(defun get-task-bounds (marker)
+  (let* ((element (org-element-at-point marker))
+		 (start (org-element-property :begin element))
+		 (end (- (org-element-property :end element) 1)))
+	(cons start end)))
+
+(defun task-focus ()
+  (deactivate-mark)
+  (let ((buf (clone-indirect-buffer focus-buffer nil))
+		(bounds (get-task-bounds (car org-clock-history))))
+    (with-current-buffer buf
+	  (narrow-to-region (car bounds) (cdr bounds)))
+    (switch-to-buffer buf)))
+
+(defun org-folded-p ()
+  (and (or (org-at-heading-p)
+           (org-at-item-p))
+       (invisible-p (point-at-eol))))
+
+(defun task-unfocus ()
+  (when (get-buffer focus-buffer)
+	(kill-buffer focus-buffer)
+	(org-previous-visible-heading 1)
+	(if (not (org-folded-p))
+		(org-cycle))))
+
+(add-hook 'org-clock-in-hook 'task-focus)
+(add-hook 'org-clock-out-hook 'task-unfocus)
+#+END_SRC
 ** Journal
 #+BEGIN_SRC emacs-lisp
 (use-package org-journal
