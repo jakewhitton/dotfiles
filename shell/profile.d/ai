@@ -1,4 +1,4 @@
-function chat() {
+function ollama_call() {
     curl http://localhost:11434/api/chat -d '{
   "model": "llama3",
   "stream": false,
@@ -7,3 +7,5 @@ function chat() {
   ]
 }'
 }
+
+alias chat='parllama'

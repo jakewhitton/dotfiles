@@ -1,6 +1,11 @@
 # ~/.bashrc
 
 export EDITOR=vim
+ 
+if [ -f /etc/bash_completion.d/bash_completion ]
+then
+    source /etc/bash_completion.d/bash_completion ]
+fi
 
 if [[ $- != *i* ]] ; then
 	# Shell is non-interactive.  Be done now!

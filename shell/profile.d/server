@@ -1,0 +1,1 @@
+alias sshserver='ssh -X jake@192.168.1.9'

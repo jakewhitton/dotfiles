@@ -1,0 +1,2 @@
+export AM_DIR="/home/jake/programming/repos/am"
+alias ca='cd "$AM_DIR"'
