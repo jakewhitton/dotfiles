@@ -105,9 +105,9 @@
 
 (defun goto-task ()
   (when focus-element
-	(goto-char (point-min))
-	(search-forward
-	 (org-element-property :raw-value focus-element))))
+  (goto-char (point-min))
+  (search-forward
+   (org-element-property :raw-value focus-element))))
 
 (defun get-task-bounds ()
   (cons
@@ -115,16 +115,18 @@
    (- (org-element-property :end focus-element) 1)))
 
 (defun task-focus ()
-  ;(deactivate-mark)
+  (when (get-buffer focus-buffer)
+    (kill-buffer focus-buffer))
   (setq focus-element (org-element-at-point (car org-clock-history)))
   (goto-task)
   (if (org-folded-p)
-	  (org-cycle))
-  (let ((buf (clone-indirect-buffer focus-buffer nil))
-		(bounds (get-task-bounds)))
-    (with-current-buffer buf
-	  (narrow-to-region (car bounds) (cdr bounds)))
-    (switch-to-buffer buf)))
+      (org-cycle))
+  (let ((bounds (get-task-bounds)))
+    (switch-to-buffer
+      (clone-indirect-buffer focus-buffer nil))
+    (narrow-to-region (car bounds) (cdr bounds)))
+    (when (get-buffer "gtd")
+          (kill-buffer "gtd")))
 
 (defun org-folded-p ()
   (and (or (org-at-heading-p)
@@ -133,9 +135,9 @@
 
 (defun task-unfocus ()
   (when (get-buffer focus-buffer)
-	  (kill-buffer focus-buffer)
-	  (goto-task)
-	  (if (not (org-folded-p))
+    (kill-buffer focus-buffer)
+    (goto-task)
+    (if (not (org-folded-p))
         (org-cycle))))
 
 (add-hook 'org-clock-in-hook 'task-focus)
