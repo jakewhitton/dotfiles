@@ -101,17 +101,27 @@
 ; TODO: investigate implementation that uses org-tree-to-indirect-buffer
 
 (setq focus-buffer "*Task*")
+(setq focus-element nil)
 
-(defun get-task-bounds (marker)
-  (let* ((element (org-element-at-point marker))
-		 (start (org-element-property :begin element))
-		 (end (- (org-element-property :end element) 1)))
-	(cons start end)))
+(defun goto-task ()
+  (when focus-element
+	(goto-char (point-min))
+	(search-forward
+	 (org-element-property :raw-value focus-element))))
+
+(defun get-task-bounds ()
+  (cons
+   (org-element-property :begin focus-element)
+   (- (org-element-property :end focus-element) 1)))
 
 (defun task-focus ()
-  (deactivate-mark)
+  ;(deactivate-mark)
+  (setq focus-element (org-element-at-point (car org-clock-history)))
+  (goto-task)
+  (if (org-folded-p)
+	  (org-cycle))
   (let ((buf (clone-indirect-buffer focus-buffer nil))
-		(bounds (get-task-bounds (car org-clock-history))))
+		(bounds (get-task-bounds)))
     (with-current-buffer buf
 	  (narrow-to-region (car bounds) (cdr bounds)))
     (switch-to-buffer buf)))
@@ -123,10 +133,10 @@
 
 (defun task-unfocus ()
   (when (get-buffer focus-buffer)
-	(kill-buffer focus-buffer)
-	(org-previous-visible-heading 1)
-	(if (not (org-folded-p))
-		(org-cycle))))
+	  (kill-buffer focus-buffer)
+	  (goto-task)
+	  (if (not (org-folded-p))
+        (org-cycle))))
 
 (add-hook 'org-clock-in-hook 'task-focus)
 (add-hook 'org-clock-out-hook 'task-unfocus)
@@ -288,7 +298,7 @@
 #+END_SRC
 ** Font
 #+BEGIN_SRC emacs-lisp
-(add-to-list 'default-frame-alist '(font . "Droid Sans Mono-14"))
+(add-to-list 'default-frame-alist '(font . "Inconsolata-14"))
 #+END_SRC
 ** Line numbers
 #+BEGIN_SRC emacs-lisp
